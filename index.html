@@ -12,7 +12,8 @@
   <meta property="og:url" content="https://skulitom.github.io/">
   <link rel="canonical" href="https://skulitom.github.io/">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preload" href="assets/fonts/inter-latin-v2.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -22,10 +23,10 @@
       <nav aria-label="Main navigation"><a href="#work">Work</a><a href="#apps">Apps</a><a href="#about">About</a><a class="nav-github" href="https://github.com/skulitom">GitHub <span aria-hidden="true">↗</span></a></nav>
     </header>
 
-    <main id="main">
+    <main id="main" tabindex="-1">
       <section class="hero" id="top" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="eyebrow"><span class="tiny-line" aria-hidden="true"></span> Artem Skulimovskiy <span class="location">/ London, UK</span></p>
+          <p class="hero-identity"><span class="tiny-line" aria-hidden="true"></span><span>Artem Skulimovskiy</span><span class="location">London, UK</span></p>
           <h1 id="hero-title">Backend engineering.<br>Distributed systems.<br><span>Applied AI.</span></h1>
           <p class="hero-description">I build software that turns complex problems into useful tools — from production compute platforms to agent systems and interactive applications.</p>
           <div class="hero-actions"><a class="button button-primary" href="#work">Explore my work <span aria-hidden="true">↓</span></a><a class="text-link" href="https://github.com/skulitom">Find me on GitHub <span aria-hidden="true">↗</span></a></div>
@@ -73,9 +74,9 @@
         <div class="section-heading"><div><p class="eyebrow">02 / Published on Android</p><h2 id="apps-title">A little knowledge, every day.</h2></div><a class="text-link" href="https://play.google.com/store/apps/developer?id=Skulitom">Google Play <span aria-hidden="true">↗</span></a></div>
         <p class="section-intro">Educational quiz apps I design and publish, exploring language and history.</p>
         <div class="app-grid">
-          <article class="app-card greek-app"><div class="app-top"><img class="app-icon" src="assets/greek-icon.webp" alt="" width="64" height="64" loading="lazy"><span class="project-category">Language</span></div><h3>Greek Letters Quiz</h3><p>Learn the Greek alphabet through symbol recognition and alphabet-order quizzes.</p><a class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.greekletters.quiz" aria-label="Greek Letters Quiz on Google Play"><img src="assets/greek-screen.webp" width="265" height="592" alt="Greek Letters Quiz app screen." loading="lazy"></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.greekletters.quiz">View on Google Play <span aria-hidden="true">↗</span></a></article>
-          <article class="app-card armour-app"><div class="app-top"><img class="app-icon" src="assets/armour-icon.webp" alt="" width="64" height="64" loading="lazy"><span class="project-category">History</span></div><h3>Medieval Armor Quiz</h3><p>Identify historical armour through images, descriptions, and the periods it belongs to.</p><a class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.armourquiz.medieval" aria-label="Medieval Armor Quiz on Google Play"><img src="assets/armour-screen.webp" width="265" height="592" alt="Medieval Armor Quiz app screen." loading="lazy"></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.armourquiz.medieval">View on Google Play <span aria-hidden="true">↗</span></a></article>
-          <article class="app-card roman-app"><div class="app-top"><img class="app-icon" src="assets/roman-icon.webp" alt="" width="64" height="64" loading="lazy"><span class="project-category">History</span></div><h3>Roman Emperors Quiz</h3><p>Put a name to the portrait and explore the emperors and dynasties of ancient Rome.</p><a class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.romanemperor.quiz" aria-label="Roman Emperors Quiz on Google Play"><img src="assets/roman-screen.webp" width="333" height="592" alt="Roman Emperors Quiz app screen." loading="lazy"></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.romanemperor.quiz">View on Google Play <span aria-hidden="true">↗</span></a></article>
+          <article class="app-card greek-app"><div class="app-top"><img class="app-icon" src="assets/greek-icon.webp" alt="" width="64" height="64" loading="lazy"><span class="project-category">Language</span></div><h3>Greek Letters Quiz</h3><p>Learn the Greek alphabet through symbol recognition and alphabet-order quizzes.</p><a class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.greekletters.quiz" aria-label="Greek Letters Quiz on Google Play"><img src="assets/greek-screen.webp" width="265" height="592" alt="Greek Letters Quiz home screen with Name, Symbol, and Order modes." loading="lazy"></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.greekletters.quiz">View on Google Play <span aria-hidden="true">↗</span></a></article>
+          <article class="app-card armour-app"><div class="app-top"><img class="app-icon" src="assets/armour-icon.webp" alt="" width="64" height="64" loading="lazy"><span class="project-category">History</span></div><h3>Medieval Armor Quiz</h3><p>Identify historical armour through images, descriptions, and the periods it belongs to.</p><a class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.armourquiz.medieval" aria-label="Medieval Armor Quiz on Google Play"><img src="assets/armour-screen.webp" width="265" height="592" alt="Medieval Armor Quiz showing a historical helmet and four answer choices." loading="lazy"></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.armourquiz.medieval">View on Google Play <span aria-hidden="true">↗</span></a></article>
+          <article class="app-card roman-app"><div class="app-top"><img class="app-icon" src="assets/roman-icon.webp" alt="" width="64" height="64" loading="lazy"><span class="project-category">History</span></div><h3>Roman Emperors Quiz</h3><p>Put a name to the portrait and explore the emperors and dynasties of ancient Rome.</p><a class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.romanemperor.quiz" aria-label="Roman Emperors Quiz on Google Play"><img src="assets/roman-screen.webp" width="333" height="592" alt="Roman Emperors Quiz home screen with historical periods and Names and Images modes." loading="lazy"></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.romanemperor.quiz">View on Google Play <span aria-hidden="true">↗</span></a></article>
         </div>
       </section>
 

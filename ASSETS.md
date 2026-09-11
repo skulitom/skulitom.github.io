@@ -10,11 +10,10 @@ These assets represent Artem's existing projects and published applications. Pro
 - `assets/armour-icon.webp` and `assets/armour-screen.webp`: actual icon and screenshot from the [Medieval Armor Quiz listing](https://play.google.com/store/apps/details?id=com.armourquiz.medieval).
 - `assets/roman-icon.webp` and `assets/roman-screen.webp`: actual icon and screenshot from the [Roman Emperors Quiz listing](https://play.google.com/store/apps/details?id=com.romanemperor.quiz).
 
-The Google Play images were retrieved on 11 September 2026 and converted to WebP for delivery. The portfolio presents cropped previews; the original app screens are available through their store links.
+The Google Play images were retrieved on 11 September 2026 and converted to WebP for delivery. The portfolio shows each complete app screen at its original aspect ratio.
 
 ## Fonts and icons
 
-- Inter variable font by Rasmus Andersson, downloaded from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/inter) and compressed to WOFF2. Licensed under the SIL Open Font License; see `assets/fonts/OFL.txt`.
+- Inter variable font by Rasmus Andersson, downloaded from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/inter). The site preloads `inter-latin-v2.woff2`, a WOFF2 subset covering Latin text, punctuation, currency symbols, and arrows. The original font file remains available for previously cached stylesheets. Licensed under the SIL Open Font License; see `assets/fonts/OFL.txt`.
 - Toolkit badges are reused from Artem's [profile repository](https://github.com/skulitom/skulitom). Brand paths derive from Simple Icons 16.30.0 under CC0; see `assets/toolkit/SIMPLE-ICONS-LICENSE.md`. Logos remain subject to their respective owners' trademark rights.
 - Favicon: custom letter A monogram for this portfolio.
-
