@@ -1,0 +1,20 @@
+# Asset sources
+
+These assets represent Artem's existing projects and published applications. Project and app imagery retains its original ownership; no general reuse licence is granted here.
+
+- `assets/export-atlas.jpg`: actual browser capture of [Export Atlas](https://skulitom.github.io/export-atlas/) on 11 September 2026.
+- `assets/london-map.jpg`: actual browser capture of [London in minutes](https://skulitom.github.io/london-time-map/) on 11 September 2026.
+- `assets/litharness.webp`: existing [LitHarness banner artwork](https://github.com/skulitom/LitHarness/blob/main/docs/banner.png), converted to WebP. This is project artwork, not a screenshot of the application.
+- `assets/cathode.webp`: actual [Cathode application screenshot](https://github.com/skulitom/CathodeDisplay/blob/main/docs/images/cathode-dark-arcade.jpg), converted to WebP.
+- `assets/greek-icon.webp` and `assets/greek-screen.webp`: actual icon and screenshot from the [Greek Letters Quiz listing](https://play.google.com/store/apps/details?id=com.greekletters.quiz).
+- `assets/armour-icon.webp` and `assets/armour-screen.webp`: actual icon and screenshot from the [Medieval Armor Quiz listing](https://play.google.com/store/apps/details?id=com.armourquiz.medieval).
+- `assets/roman-icon.webp` and `assets/roman-screen.webp`: actual icon and screenshot from the [Roman Emperors Quiz listing](https://play.google.com/store/apps/details?id=com.romanemperor.quiz).
+
+The Google Play images were retrieved on 11 September 2026 and converted to WebP for delivery. The portfolio presents cropped previews; the original app screens are available through their store links.
+
+## Fonts and icons
+
+- Inter variable font by Rasmus Andersson, downloaded from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/inter) and compressed to WOFF2. Licensed under the SIL Open Font License; see `assets/fonts/OFL.txt`.
+- Toolkit badges are reused from Artem's [profile repository](https://github.com/skulitom/skulitom). Brand paths derive from Simple Icons 16.30.0 under CC0; see `assets/toolkit/SIMPLE-ICONS-LICENSE.md`. Logos remain subject to their respective owners' trademark rights.
+- Favicon: custom letter A monogram for this portfolio.
+

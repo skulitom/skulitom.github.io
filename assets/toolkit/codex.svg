@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="132" height="40" viewBox="0 0 132 40" role="img" aria-label="Codex">
+<title>Codex</title>
+<defs><clipPath id="pill"><rect x="1" y="4" width="130" height="32" rx="10"/></clipPath></defs>
+<g clip-path="url(#pill)">
+<rect x="1" y="4" width="130" height="32" fill="#111721"/>
+<rect x="40" y="4" width="91" height="32" fill="#8befd8" fill-opacity=".18"/>
+<path d="M40 5 V35" stroke="#8befd8" stroke-opacity=".24"/>
+</g>
+<rect x="1" y="4" width="130" height="32" rx="10" fill="none" stroke="#8befd8" stroke-opacity=".48"/>
+<g fill="none" stroke="#8befd8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="11" width="20" height="18" rx="4"/><path d="M15 16 L19 20 L15 24 M22 24 H27"/></g>
+<text x="85" y="24" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="10.5" font-weight="700" letter-spacing=".75" fill="#f1f4fa">CODEX</text>
+</svg>

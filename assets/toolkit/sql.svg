@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="132" height="40" viewBox="0 0 132 40" role="img" aria-label="SQL">
+<title>SQL</title>
+<defs><clipPath id="pill"><rect x="1" y="4" width="130" height="32" rx="10"/></clipPath></defs>
+<g clip-path="url(#pill)">
+<rect x="1" y="4" width="130" height="32" fill="#111721"/>
+<rect x="40" y="4" width="91" height="32" fill="#b8a1ff" fill-opacity=".18"/>
+<path d="M40 5 V35" stroke="#b8a1ff" stroke-opacity=".24"/>
+</g>
+<rect x="1" y="4" width="130" height="32" rx="10" fill="none" stroke="#b8a1ff" stroke-opacity=".48"/>
+<g fill="none" stroke="#b8a1ff" stroke-width="1.6"><ellipse cx="21" cy="13" rx="8" ry="3"/><path d="M13 13 V27 C13 31 29 31 29 27 V13 M13 20 C13 24 29 24 29 20"/></g>
+<text x="85" y="24" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="10.5" font-weight="700" letter-spacing=".75" fill="#f1f4fa">SQL</text>
+</svg>
