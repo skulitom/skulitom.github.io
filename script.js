@@ -12,6 +12,7 @@ import { Life, SIZE } from './life.js';
   const sections = navigationLinks.map(link => document.querySelector(link.hash));
   let motionEnabled = !reducedMotion.matches;
   let syncCanvas = () => {};
+  let syncVideo = () => {};
 
   function applyMotionPreference() {
     document.body.dataset.motion = motionEnabled ? 'on' : 'off';
@@ -19,6 +20,7 @@ import { Life, SIZE } from './life.js';
     motionButton.querySelector('.motion-label').textContent = motionEnabled ? 'Pause motion' : 'Resume motion';
     motionButton.querySelector('.motion-icon').textContent = motionEnabled ? 'Ⅱ' : '▷';
     syncCanvas();
+    syncVideo();
   }
 
   motionButton.hidden = false;
@@ -31,6 +33,50 @@ import { Life, SIZE } from './life.js';
     applyMotionPreference();
   });
   applyMotionPreference();
+
+  const preview = document.querySelector('.project-video');
+  const previewButton = document.querySelector('.video-toggle');
+  if (preview && previewButton) {
+    let visible = false;
+    let userPlayback = null;
+    let previousMotion = motionEnabled;
+    preview.controls = false;
+    previewButton.hidden = false;
+
+    function updatePreviewButton() {
+      const playing = !preview.paused;
+      previewButton.setAttribute('aria-label', playing ? 'Pause Primordia animation' : 'Play Primordia animation');
+      previewButton.textContent = playing ? 'Ⅱ' : '▷';
+    }
+
+    syncVideo = () => {
+      if (previousMotion !== motionEnabled) userPlayback = null;
+      previousMotion = motionEnabled;
+      const shouldPlay = (userPlayback ?? motionEnabled) && visible && !document.hidden;
+      if (shouldPlay) {
+        preview.play().catch(updatePreviewButton);
+      } else {
+        preview.pause();
+      }
+      updatePreviewButton();
+    };
+    previewButton.addEventListener('click', () => {
+      userPlayback = preview.paused;
+      syncVideo();
+    });
+    preview.addEventListener('play', updatePreviewButton);
+    preview.addEventListener('pause', updatePreviewButton);
+    document.addEventListener('visibilitychange', syncVideo);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        syncVideo();
+      }, { threshold: 0 }).observe(preview);
+    } else {
+      visible = true;
+      syncVideo();
+    }
+  }
 
   // Scroll work is coalesced to one animation frame, with no layout mutations
   // inside the measurement pass. Links announce the current section to AT.
