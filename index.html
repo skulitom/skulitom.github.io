@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1116">
+  <meta name="theme-color" content="#0b0d12">
   <title>Artem Skulimovskiy — Software Engineer</title>
   <meta name="description" content="London-based software engineer working across backend infrastructure, distributed systems, and applied AI. Explore projects, agent tooling, and published Android apps.">
   <meta property="og:type" content="website">
@@ -13,86 +13,88 @@
   <link rel="canonical" href="https://skulitom.github.io/">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-latin-v2.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
+  <script src="script.js?v=2" type="module"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <div class="page-shell">
-    <header class="site-header">
-      <a class="brand" href="#top" aria-label="Artem Skulimovskiy, back to top"><img src="assets/favicon.svg" width="38" height="38" alt=""><span>artem<span class="brand-secondary"> / skulitom</span></span></a>
-      <nav aria-label="Main navigation"><a href="#work">Work</a><a href="#apps">Apps</a><a href="#about">About</a><a class="nav-github" href="https://github.com/skulitom">GitHub <span aria-hidden="true">↗</span></a></nav>
-    </header>
+  <div class="reading-progress" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="header-inner wrap">
+      <a class="brand" href="#top" aria-label="Artem Skulimovskiy, back to top"><img src="assets/favicon.svg" width="34" height="34" alt=""><span>artem<span class="brand-slash"> / </span><span class="brand-handle">skulitom</span></span></a>
+      <nav aria-label="Main navigation"><a href="#work">Work</a><a href="#apps">Apps</a><a href="#about">About</a></nav>
+      <a class="header-github" href="https://github.com/skulitom">GitHub <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+  <main id="main" tabindex="-1">
+    <section class="hero wrap" id="top" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow hero-eyebrow"><span class="short-rule" aria-hidden="true"></span> Software engineer <span class="location">London, UK</span></p>
+        <h1 id="hero-title"><span>Artem</span><span>Skulimovskiy<span class="name-period">.</span></span></h1>
+        <p class="hero-specialisms">Backend infrastructure.<br>Distributed systems. <span>Applied AI.</span></p>
+        <p class="hero-description">I build software that turns complex problems into useful tools — from production compute platforms to agent systems and interactive applications.</p>
+        <div class="hero-actions"><a class="button button-primary" href="#work"><span>Explore my work</span><span class="button-arrow" aria-hidden="true">↓</span></a><a class="text-link" href="#about">A little about me <span aria-hidden="true">↗</span></a></div>
+      </div>
+      <figure class="systems-study" aria-labelledby="study-caption">
+        <div class="study-label"><span class="eyebrow">Artificial life</span><span class="study-code">Primordia / 01</span></div>
+        <div class="study-stage">
+          <img class="study-fallback" src="assets/artificial-life.webp" width="560" height="560" alt="" aria-hidden="true">
+          <canvas id="life-canvas" width="560" height="560" aria-hidden="true"></canvas>
+        </div>
+        <figcaption id="study-caption"><span>Simple rules. Emergent life.<small>Reaction–diffusion, inspired by Primordia.</small></span><div class="study-controls"><button class="seed-life" type="button" hidden><span aria-hidden="true">+</span> Seed life</button><button class="motion-toggle" type="button" hidden aria-label="Animate artificial life" aria-pressed="true"><span class="motion-icon" aria-hidden="true">Ⅱ</span><span class="motion-label">Pause motion</span></button></div></figcaption>
+      </figure>
+      <div class="hero-bottom"><p>Architecture <span aria-hidden="true">/</span> Implementation <span aria-hidden="true">/</span> Evaluation</p><a href="#work" class="scroll-cue" aria-label="Scroll to selected work"><span aria-hidden="true">↓</span></a></div>
+    </section>
 
-    <main id="main" tabindex="-1">
-      <section class="hero" id="top" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="hero-identity"><span class="tiny-line" aria-hidden="true"></span><span>Artem Skulimovskiy</span><span class="location">London, UK</span></p>
-          <h1 id="hero-title">Backend engineering.<br>Distributed systems.<br><span>Applied AI.</span></h1>
-          <p class="hero-description">I build software that turns complex problems into useful tools — from production compute platforms to agent systems and interactive applications.</p>
-          <div class="hero-actions"><a class="button button-primary" href="#work">Explore my work <span aria-hidden="true">↓</span></a><a class="text-link" href="https://github.com/skulitom">Find me on GitHub <span aria-hidden="true">↗</span></a></div>
-        </div>
-        <aside class="approach-panel" aria-labelledby="approach-title">
-          <div class="panel-label"><span class="eyebrow">How I build</span><span class="panel-mark" aria-hidden="true">[ A → Z ]</span></div>
-          <h2 id="approach-title">Engineering<br> with AI agents.</h2>
-          <p>I set the direction, coordinate the work, and stay accountable for the result.</p>
-          <ol class="agent-flow">
-            <li><span class="step-number">01</span><div><strong>Define</strong><span>Problem, architecture, constraints</span></div></li>
-            <li><span class="step-number">02</span><div><strong>Build</strong><span>Agent-assisted implementation</span></div></li>
-            <li><span class="step-number">03</span><div><strong>Verify</strong><span>Review, tests, reproducible checks</span></div></li>
-          </ol>
-          <p class="panel-tools">Codex <span aria-hidden="true">/</span> Claude Code <span aria-hidden="true">/</span> MCP</p>
-        </aside>
-      </section>
+    <section class="work section wrap" id="work" aria-labelledby="work-title">
+      <div class="section-heading" data-reveal><div><p class="eyebrow">01 / Independent projects</p><h2 id="work-title">Selected <em>work.</em></h2></div><a class="text-link" href="https://github.com/skulitom?tab=repositories">All repositories <span aria-hidden="true">↗</span></a></div>
+      <div class="project-grid"><article class="project-card atlas-card" data-reveal="">
+<a aria-label="Open Export Atlas" class="project-image" data-spotlight="" href="https://skulitom.github.io/export-atlas/"><img alt="Export Atlas showing a world map, market selector, and country export rankings." decoding="async" fetchpriority="high" height="960" src="assets/export-atlas.jpg" width="1440"/><span class="image-badge">Interactive atlas <span aria-hidden="true">↗</span></span></a>
+<div class="project-copy"><p class="project-category"><span aria-hidden="true" class="project-number">01</span>Data visualisation</p><h3><a href="https://skulitom.github.io/export-atlas/">Export Atlas</a></h3><p>Explore the geography of global trade. Compare countries, goods and services, and see how export markets change over time.</p><ul aria-label="Export Atlas technologies" class="tags"><li>JavaScript</li><li>UN Comtrade</li><li>World Bank</li></ul><div class="project-links"><a href="https://skulitom.github.io/export-atlas/">Explore the atlas <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/export-atlas">Source code</a></div></div>
+</article>
+<article class="project-card lit-card" data-reveal="">
+<a aria-label="Explore LitHarness on GitHub" class="project-image" data-spotlight="" href="https://github.com/skulitom/LitHarness"><img alt="LitHarness project artwork: a constellation dragon emerging from an open book." decoding="async" height="788" loading="lazy" src="assets/litharness.webp" width="1412"/><span class="image-badge">Agent systems <span aria-hidden="true">↗</span></span></a>
+<div class="project-copy"><p class="project-category"><span aria-hidden="true" class="project-number">02</span>AI &amp; orchestration</p><h3><a href="https://github.com/skulitom/LitHarness">LitHarness</a></h3><p>A serial-fiction engine that coordinates specialised agents across planning, drafting, continuity, and revision, with persistent state and manuscript history.</p><ul aria-label="LitHarness technologies" class="tags"><li>Python</li><li>LLM agents</li><li>Persistent state</li></ul><div class="project-links"><a href="https://github.com/skulitom/LitHarness">Explore the project <span aria-hidden="true">↗</span></a></div></div>
+</article>
+<article class="project-card london-card" data-reveal="">
+<a aria-label="Open London in minutes" class="project-image" data-spotlight="" href="https://skulitom.github.io/london-time-map/"><img alt="London in minutes displaying coloured travel-time bands across London." decoding="async" height="720" loading="lazy" src="assets/london-map.jpg" width="1280"/><span class="image-badge">Interactive map <span aria-hidden="true">↗</span></span></a>
+<div class="project-copy"><p class="project-category"><span aria-hidden="true" class="project-number">03</span>Maps &amp; modelling</p><h3><a href="https://skulitom.github.io/london-time-map/">London in minutes</a></h3><p>A different way to see the city: by travel time. Explore approximate journeys across walking, rail, buses, and driving on an interactive map.</p><ul aria-label="London in minutes technologies" class="tags"><li>JavaScript</li><li>D3</li><li>Canvas</li></ul><div class="project-links"><a href="https://skulitom.github.io/london-time-map/">Explore the map <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/london-time-map">Source code</a></div></div>
+</article>
+<article class="project-card cathode-card" data-reveal="">
+<a aria-label="Explore Cathode on GitHub" class="project-image" data-spotlight="" href="https://github.com/skulitom/CathodeDisplay"><img alt="Actual Cathode virtual monitor with glowing phosphor text and a curved CRT display." decoding="async" height="974" loading="lazy" src="assets/cathode.webp" width="1428"/><span class="image-badge">Windows application <span aria-hidden="true">↗</span></span></a>
+<div class="project-copy"><p class="project-category"><span aria-hidden="true" class="project-number">04</span>Desktop &amp; graphics</p><h3><a href="https://github.com/skulitom/CathodeDisplay">Cathode</a></h3><p>A CRT virtual monitor for real Windows apps. Phosphor pixels, scanlines, glow, and curved glass bring an old display language to modern software.</p><ul aria-label="Cathode technologies" class="tags"><li>C#</li><li>.NET</li><li>Windows</li></ul><div class="project-links"><a href="https://github.com/skulitom/CathodeDisplay">Explore the project <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/CathodeDisplay/releases/latest">Releases</a></div></div>
+</article></div>
+      <div class="more-projects">
+<article class="project-row" data-reveal=""><span aria-hidden="true" class="row-symbol">↔</span><div><p class="project-category">Human–agent interaction</p><h3><a href="https://github.com/skulitom/AgentUI">AgentUI <span aria-hidden="true">↗</span></a></h3><p>An MCP server that gives coding agents interactive forms, sliders, diffs, and live previews for working with people.</p><ul class="tags"><li>MCP</li><li>TypeScript</li><li>React</li></ul></div></article>
+<article class="project-row" data-reveal=""><span aria-hidden="true" class="row-symbol violet">⌘</span><div><p class="project-category">Generative models</p><h3><a href="https://github.com/skulitom/Latent-Space-Explorer">Latent Space Explorer <span aria-hidden="true">↗</span></a></h3><p>Navigate generative images with words and WASD. An experiment in steering through semantic directions in latent space.</p><ul class="tags"><li>Flux</li><li>PyTorch</li><li>Pygame</li></ul></div></article>
+</div>
+    </section>
 
-      <section class="work section" id="work" aria-labelledby="work-title">
-        <div class="section-heading"><div><p class="eyebrow">01 / Selected work</p><h2 id="work-title">Ideas, engineered.</h2></div><a class="text-link" href="https://github.com/skulitom?tab=repositories">All repositories <span aria-hidden="true">↗</span></a></div>
-        <div class="project-grid">
-          <article class="project-card atlas-card">
-            <a class="project-image" href="https://skulitom.github.io/export-atlas/" aria-label="Open Export Atlas"><img src="assets/export-atlas.jpg" width="1440" height="960" alt="Export Atlas showing a world map, market selector, and country export rankings." fetchpriority="high"><span class="image-badge">Interactive atlas <span aria-hidden="true">↗</span></span></a>
-            <div class="project-copy"><p class="project-category">Data visualisation</p><h3><a href="https://skulitom.github.io/export-atlas/">Export Atlas</a></h3><p>Explore the geography of global trade. Compare countries, goods and services, and see how export markets change over time.</p><ul class="tags" aria-label="Export Atlas technologies"><li>JavaScript</li><li>UN Comtrade</li><li>World Bank</li></ul><div class="project-links"><a href="https://skulitom.github.io/export-atlas/">Explore the atlas <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/export-atlas">Source code</a></div></div>
-          </article>
-          <article class="project-card lit-card">
-            <a class="project-image" href="https://github.com/skulitom/LitHarness" aria-label="Explore LitHarness on GitHub"><img src="assets/litharness.webp" width="1412" height="788" alt="LitHarness project artwork: a constellation dragon emerging from an open book." loading="lazy"><span class="image-badge">Agent systems <span aria-hidden="true">↗</span></span></a>
-            <div class="project-copy"><p class="project-category">AI &amp; orchestration</p><h3><a href="https://github.com/skulitom/LitHarness">LitHarness</a></h3><p>A serial-fiction engine that coordinates specialised agents across planning, drafting, continuity, and revision, with persistent state and manuscript history.</p><ul class="tags" aria-label="LitHarness technologies"><li>Python</li><li>LLM agents</li><li>Persistent state</li></ul><div class="project-links"><a href="https://github.com/skulitom/LitHarness">Explore the project <span aria-hidden="true">↗</span></a></div></div>
-          </article>
-          <article class="project-card london-card">
-            <a class="project-image" href="https://skulitom.github.io/london-time-map/" aria-label="Open London in minutes"><img src="assets/london-map.jpg" width="1280" height="720" alt="London in minutes displaying coloured travel-time bands across London." loading="lazy"><span class="image-badge">Interactive map <span aria-hidden="true">↗</span></span></a>
-            <div class="project-copy"><p class="project-category">Maps &amp; modelling</p><h3><a href="https://skulitom.github.io/london-time-map/">London in minutes</a></h3><p>A different way to see the city: by travel time. Explore approximate journeys across walking, rail, buses, and driving on an interactive map.</p><ul class="tags" aria-label="London in minutes technologies"><li>JavaScript</li><li>D3</li><li>Canvas</li></ul><div class="project-links"><a href="https://skulitom.github.io/london-time-map/">Explore the map <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/london-time-map">Source code</a></div></div>
-          </article>
-          <article class="project-card cathode-card">
-            <a class="project-image" href="https://github.com/skulitom/CathodeDisplay" aria-label="Explore Cathode on GitHub"><img src="assets/cathode.webp" width="1428" height="974" alt="Actual Cathode virtual monitor with glowing phosphor text and a curved CRT display." loading="lazy"><span class="image-badge">Windows application <span aria-hidden="true">↗</span></span></a>
-            <div class="project-copy"><p class="project-category">Desktop &amp; graphics</p><h3><a href="https://github.com/skulitom/CathodeDisplay">Cathode</a></h3><p>A CRT virtual monitor for real Windows apps. Phosphor pixels, scanlines, glow, and curved glass bring an old display language to modern software.</p><ul class="tags" aria-label="Cathode technologies"><li>C#</li><li>.NET</li><li>Windows</li></ul><div class="project-links"><a href="https://github.com/skulitom/CathodeDisplay">Explore the project <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/CathodeDisplay/releases/latest">Releases</a></div></div>
-          </article>
-        </div>
-        <div class="more-projects">
-          <article class="project-row"><span class="row-symbol" aria-hidden="true">↔</span><div><p class="project-category">Human–agent interaction</p><h3><a href="https://github.com/skulitom/AgentUI">AgentUI <span aria-hidden="true">↗</span></a></h3><p>An MCP server that gives coding agents interactive forms, sliders, diffs, and live previews for working with people.</p><ul class="tags"><li>MCP</li><li>TypeScript</li><li>React</li></ul></div></article>
-          <article class="project-row"><span class="row-symbol violet" aria-hidden="true">⌘</span><div><p class="project-category">Generative models</p><h3><a href="https://github.com/skulitom/Latent-Space-Explorer">Latent Space Explorer <span aria-hidden="true">↗</span></a></h3><p>Navigate generative images with words and WASD. An experiment in steering through semantic directions in latent space.</p><ul class="tags"><li>Flux</li><li>PyTorch</li><li>Pygame</li></ul></div></article>
-        </div>
-      </section>
+    <section class="apps section" id="apps" aria-labelledby="apps-title">
+      <div class="wrap">
+        <div class="section-heading" data-reveal><div><p class="eyebrow">02 / Published on Android</p><h2 id="apps-title">A little knowledge.<br><em>Every day.</em></h2></div><div class="section-aside"><p>Educational quiz apps I design and publish, exploring language and history.</p><a class="text-link" href="https://play.google.com/store/apps/developer?id=Skulitom">Find them on Google Play <span aria-hidden="true">↗</span></a></div></div>
+        <div class="app-grid"><article class="app-card greek-app" data-reveal=""><div class="app-top"><img alt="" class="app-icon" decoding="async" height="64" loading="lazy" src="assets/greek-icon.webp" width="64"/><span class="project-category">Language</span></div><h3>Greek Letters Quiz</h3><p>Learn the Greek alphabet through symbol recognition and alphabet-order quizzes.</p><a aria-label="Greek Letters Quiz on Google Play" class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.greekletters.quiz"><img alt="Greek Letters Quiz home screen with Name, Symbol, and Order modes." decoding="async" height="592" loading="lazy" src="assets/greek-screen.webp" width="265"/></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.greekletters.quiz">View on Google Play <span aria-hidden="true">↗</span></a></article>
+<article class="app-card armour-app" data-reveal=""><div class="app-top"><img alt="" class="app-icon" decoding="async" height="64" loading="lazy" src="assets/armour-icon.webp" width="64"/><span class="project-category">History</span></div><h3>Medieval Armor Quiz</h3><p>Identify historical armour through images, descriptions, and the periods it belongs to.</p><a aria-label="Medieval Armor Quiz on Google Play" class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.armourquiz.medieval"><img alt="Medieval Armor Quiz showing a historical helmet and four answer choices." decoding="async" height="592" loading="lazy" src="assets/armour-screen.webp" width="265"/></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.armourquiz.medieval">View on Google Play <span aria-hidden="true">↗</span></a></article>
+<article class="app-card roman-app" data-reveal=""><div class="app-top"><img alt="" class="app-icon" decoding="async" height="64" loading="lazy" src="assets/roman-icon.webp" width="64"/><span class="project-category">History</span></div><h3>Roman Emperors Quiz</h3><p>Put a name to the portrait and explore the emperors and dynasties of ancient Rome.</p><a aria-label="Roman Emperors Quiz on Google Play" class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.romanemperor.quiz"><img alt="Roman Emperors Quiz home screen with historical periods and Names and Images modes." decoding="async" height="592" loading="lazy" src="assets/roman-screen.webp" width="333"/></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.romanemperor.quiz">View on Google Play <span aria-hidden="true">↗</span></a></article></div>
+      </div>
+    </section>
 
-      <section class="apps section" id="apps" aria-labelledby="apps-title">
-        <div class="section-heading"><div><p class="eyebrow">02 / Published on Android</p><h2 id="apps-title">A little knowledge, every day.</h2></div><a class="text-link" href="https://play.google.com/store/apps/developer?id=Skulitom">Google Play <span aria-hidden="true">↗</span></a></div>
-        <p class="section-intro">Educational quiz apps I design and publish, exploring language and history.</p>
-        <div class="app-grid">
-          <article class="app-card greek-app"><div class="app-top"><img class="app-icon" src="assets/greek-icon.webp" alt="" width="64" height="64" loading="lazy"><span class="project-category">Language</span></div><h3>Greek Letters Quiz</h3><p>Learn the Greek alphabet through symbol recognition and alphabet-order quizzes.</p><a class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.greekletters.quiz" aria-label="Greek Letters Quiz on Google Play"><img src="assets/greek-screen.webp" width="265" height="592" alt="Greek Letters Quiz home screen with Name, Symbol, and Order modes." loading="lazy"></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.greekletters.quiz">View on Google Play <span aria-hidden="true">↗</span></a></article>
-          <article class="app-card armour-app"><div class="app-top"><img class="app-icon" src="assets/armour-icon.webp" alt="" width="64" height="64" loading="lazy"><span class="project-category">History</span></div><h3>Medieval Armor Quiz</h3><p>Identify historical armour through images, descriptions, and the periods it belongs to.</p><a class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.armourquiz.medieval" aria-label="Medieval Armor Quiz on Google Play"><img src="assets/armour-screen.webp" width="265" height="592" alt="Medieval Armor Quiz showing a historical helmet and four answer choices." loading="lazy"></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.armourquiz.medieval">View on Google Play <span aria-hidden="true">↗</span></a></article>
-          <article class="app-card roman-app"><div class="app-top"><img class="app-icon" src="assets/roman-icon.webp" alt="" width="64" height="64" loading="lazy"><span class="project-category">History</span></div><h3>Roman Emperors Quiz</h3><p>Put a name to the portrait and explore the emperors and dynasties of ancient Rome.</p><a class="app-screenshot" href="https://play.google.com/store/apps/details?id=com.romanemperor.quiz" aria-label="Roman Emperors Quiz on Google Play"><img src="assets/roman-screen.webp" width="333" height="592" alt="Roman Emperors Quiz home screen with historical periods and Names and Images modes." loading="lazy"></a><a class="app-link" href="https://play.google.com/store/apps/details?id=com.romanemperor.quiz">View on Google Play <span aria-hidden="true">↗</span></a></article>
-        </div>
-      </section>
-
-      <section class="about section" id="about" aria-labelledby="about-title">
-        <div class="section-heading"><div><p class="eyebrow">03 / Background &amp; toolkit</p><h2 id="about-title">A systems perspective.</h2></div></div>
-        <div class="about-grid">
-          <div class="about-copy"><p class="large-copy">I’m a London-based software engineer with a background in quantitative computing and an interest in how complex systems behave.</p><p>At SimCorp, I work on backend infrastructure and distributed compute. Previously, I worked at Eigen Technologies and JPMorgan, and founded an education startup.</p><p>I hold an MEng in Computer Science from UCL, where I specialised in AI. Today, my interests include agent orchestration, persistent state, and evaluation methods for complex systems.</p><p>I use AI coding agents throughout development, from planning and implementation to debugging and testing. Architecture, technical judgement, and validation remain central to how I work.</p><a class="text-link" href="https://github.com/skulitom">Follow my work on GitHub <span aria-hidden="true">↗</span></a></div>
-          <div class="toolkit" aria-label="Technical toolkit">
-            <div class="toolkit-group"><h3>AI &amp; agent tooling</h3><div class="tool-pills"><img src="assets/toolkit/codex.svg" width="132" height="40" alt="Codex" loading="lazy"><img src="assets/toolkit/claude-code.svg" width="132" height="40" alt="Claude Code" loading="lazy"><img src="assets/toolkit/pytorch.svg" width="132" height="40" alt="PyTorch" loading="lazy"><img src="assets/toolkit/numpy.svg" width="132" height="40" alt="NumPy" loading="lazy"></div></div>
-            <div class="toolkit-group"><h3>Languages &amp; interfaces</h3><div class="tool-pills"><img src="assets/toolkit/python.svg" width="132" height="40" alt="Python" loading="lazy"><img src="assets/toolkit/typescript.svg" width="132" height="40" alt="TypeScript" loading="lazy"><img src="assets/toolkit/react.svg" width="132" height="40" alt="React" loading="lazy"><img src="assets/toolkit/bash.svg" width="132" height="40" alt="Bash" loading="lazy"></div></div>
-            <div class="toolkit-group"><h3>Systems &amp; data</h3><div class="tool-pills"><img src="assets/toolkit/sql.svg" width="132" height="40" alt="SQL" loading="lazy"><img src="assets/toolkit/postgresql.svg" width="132" height="40" alt="PostgreSQL" loading="lazy"><img src="assets/toolkit/docker.svg" width="132" height="40" alt="Docker" loading="lazy"><img src="assets/toolkit/linux.svg" width="132" height="40" alt="Linux" loading="lazy"></div></div>
-          </div>
-        </div>
-      </section>
-    </main>
-    <footer class="site-footer"><div><a class="footer-name" href="#top">Artem Skulimovskiy</a><p>Software engineer · London, UK</p></div><div class="footer-links"><a href="https://github.com/skulitom">GitHub <span aria-hidden="true">↗</span></a><a href="https://play.google.com/store/apps/developer?id=Skulitom">Google Play <span aria-hidden="true">↗</span></a><a href="#top">Back to top <span aria-hidden="true">↑</span></a></div></footer>
-  </div>
+    <section class="about section wrap" id="about" aria-labelledby="about-title">
+      <div class="about-grid">
+        <div class="about-heading" data-reveal><p class="eyebrow">03 / A systems perspective</p><h2 id="about-title">Curiosity.<br>Craft.<br><em>Follow-through.</em></h2><a class="text-link" href="https://github.com/skulitom">Follow my work <span aria-hidden="true">↗</span></a></div>
+        <div data-reveal><div class="about-copy"><p class="large-copy">I’m a London-based software engineer with a background in quantitative computing and an interest in how complex systems behave.</p><p>At SimCorp, I work on backend infrastructure and distributed compute. Previously, I worked at Eigen Technologies and JPMorgan, and founded an education startup.</p><p>I hold an MEng in Computer Science from UCL, where I specialised in AI. Today, my interests include agent orchestration, persistent state, and evaluation methods for complex systems.</p></div><div class="experience-line"><span>SimCorp</span><span>Eigen Technologies</span><span>JPMorgan</span><span>UCL</span></div></div>
+      </div>
+      <div class="method" data-reveal>
+        <div class="method-intro"><p class="eyebrow">How I build</p><h3>Engineering with<br><em>AI agents.</em></h3><p>I set the direction, coordinate the work, and stay accountable for the result.</p><p class="method-tools">Codex <span aria-hidden="true">/</span> Claude Code <span aria-hidden="true">/</span> MCP</p></div>
+        <ol class="method-steps"><li><span class="step-number">01</span><div><h4>Define the problem</h4><p>Establish the architecture, constraints, and what a good result looks like.</p></div></li><li><span class="step-number">02</span><div><h4>Coordinate the work</h4><p>Use coding agents across implementation, debugging, and testing.</p></div></li><li><span class="step-number">03</span><div><h4>Review and verify</h4><p>Validate the result through technical review and reproducible checks.</p></div></li></ol>
+      </div>
+      <div class="toolkit-section" data-reveal><div class="toolkit-heading"><p class="eyebrow">The technical toolkit</p><p>Tools I work with.</p></div><div aria-label="Technical toolkit" class="toolkit">
+<div class="toolkit-group"><h3>AI &amp; agent tooling</h3><div class="tool-pills"><img alt="Codex" height="40" loading="lazy" src="assets/toolkit/codex.svg" width="132"/><img alt="Claude Code" height="40" loading="lazy" src="assets/toolkit/claude-code.svg" width="132"/><img alt="PyTorch" height="40" loading="lazy" src="assets/toolkit/pytorch.svg" width="132"/><img alt="NumPy" height="40" loading="lazy" src="assets/toolkit/numpy.svg" width="132"/></div></div>
+<div class="toolkit-group"><h3>Languages &amp; interfaces</h3><div class="tool-pills"><img alt="Python" height="40" loading="lazy" src="assets/toolkit/python.svg" width="132"/><img alt="TypeScript" height="40" loading="lazy" src="assets/toolkit/typescript.svg" width="132"/><img alt="React" height="40" loading="lazy" src="assets/toolkit/react.svg" width="132"/><img alt="Bash" height="40" loading="lazy" src="assets/toolkit/bash.svg" width="132"/></div></div>
+<div class="toolkit-group"><h3>Systems &amp; data</h3><div class="tool-pills"><img alt="SQL" height="40" loading="lazy" src="assets/toolkit/sql.svg" width="132"/><img alt="PostgreSQL" height="40" loading="lazy" src="assets/toolkit/postgresql.svg" width="132"/><img alt="Docker" height="40" loading="lazy" src="assets/toolkit/docker.svg" width="132"/><img alt="Linux" height="40" loading="lazy" src="assets/toolkit/linux.svg" width="132"/></div></div>
+</div></div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="wrap"><div class="footer-top"><a class="footer-name" href="#top">Artem<br><span>Skulimovskiy.</span></a><div><p>Software engineer. London, UK.</p><div class="footer-links"><a href="https://github.com/skulitom">GitHub <span aria-hidden="true">↗</span></a><a href="https://play.google.com/store/apps/developer?id=Skulitom">Google Play <span aria-hidden="true">↗</span></a></div></div></div><div class="footer-bottom"><span>Backend infrastructure · Distributed systems · Applied AI</span><a href="#top">Back to top <span aria-hidden="true">↑</span></a></div></div></footer>
 </body>
 </html>
