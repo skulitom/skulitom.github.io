@@ -367,3 +367,8 @@ html:has(body[data-motion='off']) { scroll-behavior: auto; }
   .flight-video { border-radius: 12px; }
   .contribution { padding-block: 34px 44px; }
 }
+
+/* LitHarness remains the primary project; Haltere shows its latest game footage. */
+.hero-description a { color: var(--mint); text-decoration: underline; text-underline-offset: 3px; }
+.haltere-card .project-media { display: flex; flex-direction: column; justify-content: center; aspect-ratio: 1.5; flex-shrink: 0; }
+.project-copy > .project-result { color: #d5dae7; margin-top: 14px; }

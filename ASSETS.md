@@ -26,3 +26,5 @@ The Google Play images were retrieved on 11 September 2026 and converted to WebP
 - `assets/anode.svg` and `assets/agentui.svg`: explanatory architecture and interaction diagrams based on their public READMEs. These are diagrams, not screenshots.
 
 The app icons remain visible in compact cards. Existing app screenshots and toolkit SVGs remain available for previously cached pages.
+
+- `assets/haltere-liftoff-race.mp4`: the unmodified latest [Liftoff lap-following recording](https://github.com/skulitom/haltere/blob/main/docs/liftoff_race.mp4). `assets/haltere-liftoff-race.png` is a frame at 15 seconds, extracted without cropping or visual changes and shared with the GitHub profile. Native controls start playback on request; the static poster loads first. MIT notice: `assets/HALTERE-LICENSE.txt`. The previous hover video remains available for cached pages.
