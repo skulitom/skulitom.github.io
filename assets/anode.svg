@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400" role="img" aria-labelledby="title desc">
+<title id="title">Anode / Windows child session</title><desc id="desc">Architecture diagram showing a personal desktop and a separate child session for an agent, running as the same user.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#19162b"/><stop offset="1" stop-color="#0d1922"/></linearGradient></defs>
+<rect width="800" height="400" rx="20" fill="url(#bg)"/>
+<g font-family="Segoe UI,Arial,sans-serif">
+<text x="42" y="51" fill="#a7f3d0" font-size="16" letter-spacing="2">ANODE / WINDOWS CHILD SESSION</text>
+<rect x="42" y="87" width="324" height="209" rx="14" fill="#10151f" stroke="#647388"/>
+<rect x="434" y="87" width="324" height="209" rx="14" fill="#10151f" stroke="#9984dc"/>
+<text x="65" y="130" fill="#f0f1f6" font-size="24" font-weight="600">Your desktop</text>
+<text x="457" y="130" fill="#f0f1f6" font-size="24" font-weight="600">Agent seat</text>
+<text x="65" y="177" fill="#b9c3d3" font-size="21">Your pointer</text><text x="65" y="212" fill="#b9c3d3" font-size="21">Your keyboard focus</text><text x="65" y="247" fill="#b9c3d3" font-size="21">Your open applications</text>
+<text x="457" y="177" fill="#b9c3d3" font-size="21">Separate pointer &amp; focus</text><text x="457" y="212" fill="#b9c3d3" font-size="21">CLI &amp; MCP controls</text><text x="457" y="247" fill="#b9c3d3" font-size="21">Virtual gamepad</text>
+<path d="M380 192h38m-9-8 9 8-9 8" fill="none" stroke="#a7f3d0" stroke-width="2"/>
+<text x="400" y="349" fill="#c4bbef" font-size="21" text-anchor="middle">Same machine and files · Separate input sessions</text>
+</g></svg>

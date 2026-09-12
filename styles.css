@@ -97,7 +97,7 @@ h1 > span:last-child { font-size: .87em; }
 .seed-life:hover, .motion-toggle:hover { color: var(--mint); }
 .motion-icon { width: 13px; font-size: 12px; }
 
-/* LitHarness leads; the supporting work uses equal columns and shared baselines. */
+/* Recorded work leads; supporting projects share columns and baselines. */
 .section { padding-block: 88px; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 40px; margin-bottom: 44px; }
 .section-heading .eyebrow { margin-bottom: 17px; }
@@ -336,4 +336,34 @@ html:has(body[data-motion='off']) { scroll-behavior: auto; }
   .will-reveal { opacity: 1; transform: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .project-image > img, .app-screenshot img, .button, .button-arrow, .text-link > span, .tool-pills img { transform: none !important; }
+}
+
+/* Project refresh: evidence, readable diagrams, and compact supporting material. */
+.hero-background { max-width: 490px; margin-top: 15px; color: #c0c6d3; font-size: .875rem; line-height: 1.7; }
+.flight-video { display: block; width: 100%; height: auto; aspect-ratio: 1928 / 720; border: 1px solid #363c4d; border-radius: 16px; background: #090b12; }
+.flight-video:focus-visible { outline: 2px solid var(--mint); outline-offset: 5px; }
+.media-caption { color: var(--muted); font-size: .8125rem; margin-top: 12px; line-height: 1.6; }
+.project-card .project-note { margin-top: 12px; }
+.diagram-image { aspect-ratio: 1.5; }
+.work > .side-project { margin-top: 44px; }
+.contribution { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr); gap: 60px; border-top: 1px solid var(--line); padding-block: 48px 60px; }
+.contribution h2 { font-size: clamp(1.6rem, 2.8vw, 2.3rem); letter-spacing: -.045em; margin-top: 15px; line-height: 1.2; }
+.contribution h3 { font-size: 1.3rem; line-height: 1.5; letter-spacing: -.02em; margin-bottom: 14px; }
+.contribution h3 a:hover { color: var(--mint); }
+.contribution code { font-size: .9em; }
+.contribution-status { color: var(--mint); font: .75rem/1.6 var(--mono); margin-bottom: 10px; }
+.contribution p:last-child { color: var(--muted); }
+.toolkit-summary { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.toolkit-summary dt { color: #dce0eb; margin-bottom: 8px; font-weight: 500; }
+.toolkit-summary dd { margin: 0; color: var(--muted); }
+.app-card { display: flex; padding: 24px; }
+.app-card > p { margin-bottom: 20px; }
+.app-link { margin-top: auto; border-top: 1px solid var(--line); min-height: 50px; }
+@media (max-width: 820px) {
+  .contribution { grid-template-columns: 1fr; gap: 24px; }
+  .toolkit-summary { grid-template-columns: 1fr; gap: 22px; }
+}
+@media (max-width: 560px) {
+  .flight-video { border-radius: 12px; }
+  .contribution { padding-block: 34px 44px; }
 }

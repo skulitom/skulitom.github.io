@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400" role="img" aria-labelledby="title desc">
+<title id="title">AgentUI / Human–agent interaction</title><desc id="desc">Interaction diagram: an agent opens controls, a person adjusts them, and the response is returned as structured state.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#19162b"/><stop offset="1" stop-color="#0d1922"/></linearGradient></defs>
+<rect width="800" height="400" rx="20" fill="url(#bg)"/>
+<g font-family="Segoe UI,Arial,sans-serif">
+<text x="42" y="51" fill="#a7f3d0" font-size="16" letter-spacing="2">AGENTUI / HUMAN–AGENT INTERACTION</text>
+<rect x="42" y="87" width="324" height="209" rx="14" fill="#10151f" stroke="#647388"/>
+<rect x="434" y="87" width="324" height="209" rx="14" fill="#10151f" stroke="#9984dc"/>
+<text x="65" y="130" fill="#f0f1f6" font-size="24" font-weight="600">Coding agent</text>
+<text x="457" y="130" fill="#f0f1f6" font-size="24" font-weight="600">Person in the browser</text>
+<text x="65" y="177" fill="#b9c3d3" font-size="21">Open a control panel</text><text x="65" y="212" fill="#b9c3d3" font-size="21">Continue other work</text><text x="65" y="247" fill="#b9c3d3" font-size="21">Read the response</text>
+<text x="457" y="177" fill="#b9c3d3" font-size="21">Forms &amp; sliders</text><text x="457" y="212" fill="#b9c3d3" font-size="21">Diffs &amp; live previews</text><text x="457" y="247" fill="#b9c3d3" font-size="21">Submit a decision</text>
+<path d="M380 192h38m-9-8 9 8-9 8" fill="none" stroke="#a7f3d0" stroke-width="2"/>
+<text x="400" y="349" fill="#c4bbef" font-size="21" text-anchor="middle">MCP → Browser controls → Structured state</text>
+</g></svg>

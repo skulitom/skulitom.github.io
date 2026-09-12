@@ -19,3 +19,10 @@ The Google Play images were retrieved on 11 September 2026 and converted to WebP
 - Inter variable font by Rasmus Andersson, downloaded from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/inter). The site preloads `inter-latin-v2.woff2`, a WOFF2 subset covering Latin text, punctuation, currency symbols, and arrows. The original font file remains available for previously cached stylesheets. Licensed under the SIL Open Font License; see `assets/fonts/OFL.txt`.
 - Toolkit badges are reused from Artem's [profile repository](https://github.com/skulitom/skulitom). Brand paths derive from Simple Icons 16.30.0 under CC0; see `assets/toolkit/SIMPLE-ICONS-LICENSE.md`. Logos remain subject to their respective owners' trademark rights.
 - Favicon: custom letter A monogram for this portfolio.
+
+## September 2026 project refresh
+
+- `assets/haltere-hover.mp4`: the unmodified `docs/liftoff_hover.mp4` from [Haltere](https://github.com/skulitom/haltere), recording a 40-second hover inside Liftoff alongside the controller's neural activity. This is game footage, not physical-drone flight. It has native playback controls and does not autoplay. MIT notice: `assets/HALTERE-LICENSE.txt`.
+- `assets/anode.svg` and `assets/agentui.svg`: explanatory architecture and interaction diagrams based on their public READMEs. These are diagrams, not screenshots.
+
+The app icons remain visible in compact cards. Existing app screenshots and toolkit SVGs remain available for previously cached pages.
