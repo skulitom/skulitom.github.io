@@ -14,8 +14,8 @@
 <link href="https://skulitom.github.io/" rel="canonical"/>
 <link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
 <link as="font" crossorigin="" href="assets/fonts/inter-latin-v2.woff2" rel="preload" type="font/woff2"/>
-<link href="styles.css?v=8" rel="stylesheet"/>
-<script src="script.js?v=3" type="module"></script>
+<link href="styles.css?v=9" rel="stylesheet"/>
+<script src="script.js?v=4" type="module"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -42,7 +42,7 @@
 <img alt="" aria-hidden="true" class="study-fallback" height="560" src="assets/artificial-life.webp" width="560"/>
 <canvas aria-hidden="true" height="560" id="life-canvas" width="560"></canvas>
 </div>
-<div class="study-controls"><button class="seed-life" hidden="" type="button"><span aria-hidden="true">+</span> Seed life</button><button aria-label="Animate artificial life" aria-pressed="true" class="motion-toggle" hidden="" type="button"><span aria-hidden="true" class="motion-icon">Ⅱ</span><span class="motion-label">Pause motion</span></button></div>
+<div class="study-controls"><button class="seed-life" hidden="" type="button"><span aria-hidden="true">+</span> Seed life</button><button aria-label="Reset artificial life" class="reset-life" hidden="" type="button"><span aria-hidden="true">↻</span> Reset</button></div>
 </div>
 </section>
 <section aria-labelledby="work-title" class="work section wrap" id="work">
@@ -65,16 +65,21 @@
 </div>
 </article>
 <div class="project-grid">
-<article class="project-card" data-reveal="" id="anode">
+<article aria-labelledby="anode-title" class="project-card" data-reveal="" id="anode">
+<header class="project-header">
+<p class="project-category">Agent execution environments</p><h3 id="anode-title"><a href="https://github.com/skulitom/Anode">Anode</a></h3>
+</header>
 <a aria-label="Explore Anode on GitHub" class="project-image diagram-image" data-spotlight="" href="https://github.com/skulitom/Anode"><img alt="Anode architecture diagram: separate input sessions for a person and an agent on one Windows machine." decoding="async" height="400" loading="lazy" src="assets/anode.svg" width="800"/></a>
 <div class="project-copy">
-<p class="project-category">Agent execution environments</p><h3><a href="https://github.com/skulitom/Anode">Anode</a></h3>
 <p>A Windows child session for an agent, with its own pointer, keyboard focus, and running applications. CLI and MCP controls expose the seat, live viewer, and virtual gamepad.</p>
 <p class="project-note">Separate input sessions, running as the same user with access to the same files.</p>
 <ul aria-label="Anode technologies" class="tags"><li>C#</li><li>.NET</li><li>Windows APIs</li><li>MCP</li></ul>
 <div class="project-links"><a href="https://github.com/skulitom/Anode">Source code <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/Anode/blob/main/docs/ARCHITECTURE.md">Architecture</a></div>
 </div>
-</article><article class="project-card haltere-card" data-reveal="" id="haltere">
+</article><article aria-labelledby="haltere-title" class="project-card haltere-card" data-reveal="" id="haltere">
+<header class="project-header">
+<p class="project-category">Learned control &amp; simulation</p><h3 id="haltere-title"><a href="https://github.com/skulitom/haltere">Haltere</a></h3>
+</header>
 <div class="project-media">
 <video aria-label="Haltere following a taught race lap in Liftoff, with live neural activity" class="flight-video" controls="" height="720" muted="" playsinline="" poster="assets/haltere-liftoff-race.png" preload="none" width="1928">
 <source src="assets/haltere-liftoff-race.mp4" type="video/mp4"/>
@@ -83,8 +88,6 @@
 <p class="media-caption">Latest lap-following recording in Liftoff, with live neural activity alongside the game view.</p>
 </div>
 <div class="project-copy">
-<p class="project-category">Learned control &amp; simulation</p>
-<h3><a href="https://github.com/skulitom/haltere">Haltere</a></h3>
 <p>A connectome-constrained recurrent network trained to fly a drone in Liftoff. Its 30,000-neuron flight circuit uses fruit-fly connectivity, with learned parameters and a differentiable PyTorch simulator.</p>
 <p class="project-result">Recorded Liftoff path following: 1.5 m/s with 0.67 m mean error.</p>
 <p class="project-note">Research prototype in a drone simulator. It follows taught paths; racing speed remains limited.</p>
@@ -93,19 +96,23 @@
 </div>
 </article>
 
-<article class="project-card" data-reveal="" id="agentui">
+<article aria-labelledby="agentui-title" class="project-card" data-reveal="" id="agentui">
+<header class="project-header">
+<p class="project-category">Human–agent interaction</p><h3 id="agentui-title"><a href="https://github.com/skulitom/AgentUI">AgentUI</a></h3>
+</header>
 <a aria-label="Explore AgentUI on GitHub" class="project-image diagram-image" data-spotlight="" href="https://github.com/skulitom/AgentUI"><img alt="AgentUI interaction diagram: agent requests, browser controls, and structured responses." decoding="async" height="400" loading="lazy" src="assets/agentui.svg" width="800"/></a>
 <div class="project-copy">
-<p class="project-category">Human–agent interaction</p><h3><a href="https://github.com/skulitom/AgentUI">AgentUI</a></h3>
 <p>An MCP server for decisions that benefit from interactive controls. Coding agents open forms, sliders, diffs, and live previews, then collect the response while continuing other work.</p>
 <ul aria-label="AgentUI technologies" class="tags"><li>TypeScript</li><li>React</li><li>MCP</li><li>WebSockets</li></ul>
 <div class="project-links"><a href="https://github.com/skulitom/AgentUI">Source code <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/AgentUI#install">Installation</a></div>
 </div>
 </article>
-<article class="project-card cathode-card" data-reveal="" id="cathode">
+<article aria-labelledby="cathode-title" class="project-card cathode-card" data-reveal="" id="cathode">
+<header class="project-header">
+<p class="project-category">Desktop &amp; graphics</p><h3 id="cathode-title"><a href="https://github.com/skulitom/CathodeDisplay">Cathode</a></h3>
+</header>
 <a aria-label="Explore Cathode on GitHub" class="project-image" data-spotlight="" href="https://github.com/skulitom/CathodeDisplay"><img alt="Cathode application screenshot with a CRT virtual monitor and picture controls." decoding="async" height="974" loading="lazy" src="assets/cathode.webp" width="1428"/></a>
 <div class="project-copy">
-<p class="project-category">Desktop &amp; graphics</p><h3><a href="https://github.com/skulitom/CathodeDisplay">Cathode</a></h3>
 <p>A CRT virtual monitor for real Windows applications. GPU rendering adds phosphor pixels, scanlines, glow, and curved glass to live desktop content.</p>
 <ul aria-label="Cathode technologies" class="tags"><li>C#</li><li>WPF</li><li>GPU shaders</li></ul>
 <div class="project-links"><a href="https://github.com/skulitom/CathodeDisplay/releases/latest">Download for Windows <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/CathodeDisplay">Source code</a></div>

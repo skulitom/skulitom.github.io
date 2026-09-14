@@ -6,7 +6,6 @@ import { Life, SIZE } from './life.js';
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
-  const motionButton = document.querySelector('.motion-toggle');
   const header = document.querySelector('.site-header');
   const navigationLinks = [...document.querySelectorAll('.site-header nav a')];
   const sections = navigationLinks.map(link => document.querySelector(link.hash));
@@ -16,18 +15,10 @@ import { Life, SIZE } from './life.js';
 
   function applyMotionPreference() {
     document.body.dataset.motion = motionEnabled ? 'on' : 'off';
-    motionButton.setAttribute('aria-pressed', String(motionEnabled));
-    motionButton.querySelector('.motion-label').textContent = motionEnabled ? 'Pause motion' : 'Resume motion';
-    motionButton.querySelector('.motion-icon').textContent = motionEnabled ? 'Ⅱ' : '▷';
     syncCanvas();
     syncVideo();
   }
 
-  motionButton.hidden = false;
-  motionButton.addEventListener('click', () => {
-    motionEnabled = !motionEnabled;
-    applyMotionPreference();
-  });
   reducedMotion.addEventListener('change', () => {
     motionEnabled = !reducedMotion.matches;
     applyMotionPreference();
@@ -140,6 +131,7 @@ import { Life, SIZE } from './life.js';
   const canvas = document.querySelector('#life-canvas');
   const stage = canvas.closest('.study-stage');
   const seedButton = document.querySelector('.seed-life');
+  const resetButton = document.querySelector('.reset-life');
   const context = canvas.getContext('2d', { alpha: true });
   if (!context) return;
 
@@ -147,7 +139,7 @@ import { Life, SIZE } from './life.js';
     // A pre-grown field avoids an empty first frame or a costly warm-up on load.
     const response = await fetch(new URL('./assets/life-seed.bin', import.meta.url));
     if (!response.ok) throw new Error('Life seed unavailable');
-    const life = new Life(await response.arrayBuffer());
+    let life = new Life(await response.arrayBuffer());
     const field = document.createElement('canvas');
     field.width = field.height = SIZE;
     const fieldContext = field.getContext('2d');
@@ -228,6 +220,21 @@ import { Life, SIZE } from './life.js';
     for (const event of ['pointerup', 'pointercancel', 'pointerleave']) {
       stage.addEventListener(event, () => { drawing = false; });
     }
+    resetButton.hidden = false;
+    resetButton.addEventListener('click', () => {
+      // Start with young colonies so a settled field visibly grows again.
+      life = new Life();
+      const rotation = Math.random() * Math.PI * 2;
+      for (let i = 0; i < 18; i++) {
+        const angle = rotation + i * 2.399963;
+        const radius = .05 + .26 * Math.sqrt(i / 18);
+        life.plant(.5 + Math.cos(angle) * radius, .5 + Math.sin(angle) * radius, 3 + i % 3);
+      }
+      drawing = false;
+      lastPaint = 0;
+      draw();
+      syncCanvas();
+    });
     seedButton.hidden = false;
     seedButton.addEventListener('click', () => {
       // Choose a sparse visible region so a keyboard/touch seed is easy to see.
