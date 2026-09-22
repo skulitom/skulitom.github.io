@@ -36,3 +36,7 @@ The Haltere preview now uses the [20 September figure-eight recording](https://g
 The existing Primordia reel and poster show its four original worlds; the project now also includes Symbiosis. Earlier assets remain available for cached pages.
 
 `assets/portfolio-social-20260922.png` is a browser screenshot of this portfolio’s introduction with its static artificial-life fallback, for link previews.
+
+## LitHarness writing sample
+
+`litharness.html` and `assets/litharness/the-last-anchorage-chapter-1.txt` reproduce the AI-generated opening chapter from the 19 September 2026 full-book trial, with no editorial changes. Its normalized text SHA-256 is `e5148af764c34039f371636f2cfabd19526f29f8c03804a72c5cc9e864909af0`, matching `books.A1.scene_hashes.scene-1` in the [published evidence](https://github.com/skulitom/LitHarness/blob/526ab8266f33d16bff475625b0d19a698a53731e/research/quality-measurement/full-book-trial-20260919/evidence.json). The public [run record](https://github.com/skulitom/LitHarness/blob/526ab8266f33d16bff475625b0d19a698a53731e/research/quality-measurement/full-book-trial-20260919/RESULTS.md) describes the complete draft and its recovery/quality limitations. Formatting is adapted for the portfolio. `assets/litharness/sample-provenance.json` records source and download checksums.

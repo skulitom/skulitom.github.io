@@ -26,3 +26,5 @@ The `Publish portfolio` GitHub Actions workflow publishes pushes to `main` autom
 Keep personal contact details and private CV documents out of this public repository. Update image filenames when replacing screenshots if an old version remains cached.
 
 The Pause motion control stops the artificial-life animation and automatic video playback; Resume motion restores them. The system reduced-motion preference sets the initial state. Supporting projects share responsive rows, and social metadata uses a local screenshot of the introduction. Verify dated project results and repository section links when updating content.
+
+`litharness.html` is the outcome-focused walkthrough and unedited opening-chapter sample. The publishing workflow includes this page explicitly. Its chapter text and provenance are in `assets/litharness/`; preserve the source wording when changing presentation. The six additional experiments are in a native `<details>` disclosure that also works without JavaScript. LinkedIn is linked from Experience and the footer.

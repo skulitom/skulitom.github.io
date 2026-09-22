@@ -106,6 +106,7 @@ import { Life, SIZE } from './life.js';
   window.addEventListener('scroll', queueNavigation, { passive: true });
   window.addEventListener('resize', queueNavigation, { passive: true });
   window.addEventListener('pageshow', queueNavigation);
+  document.querySelectorAll('details').forEach(element => element.addEventListener('toggle', queueNavigation));
   document.fonts?.ready.then(queueNavigation);
   updateNavigation();
 

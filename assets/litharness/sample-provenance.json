@@ -1,0 +1,14 @@
+{
+  "title": "The Last Anchorage",
+  "chapter": 1,
+  "generated_on": "2026-09-19",
+  "run": "full-book-trial-20260919",
+  "book_id": "A1",
+  "word_count": 2352,
+  "accepted_scene_sha256": "e5148af764c34039f371636f2cfabd19526f29f8c03804a72c5cc9e864909af0",
+  "download_sha256": "037adcbffae088432b34afae698e6408f1e540082d961dd09dd8fdbe43bd8999",
+  "evidence_commit": "526ab8266f33d16bff475625b0d19a698a53731e",
+  "run_record": "https://github.com/skulitom/LitHarness/blob/526ab8266f33d16bff475625b0d19a698a53731e/research/quality-measurement/full-book-trial-20260919/RESULTS.md",
+  "editorial_changes": false,
+  "note": "AI-generated opening chapter from a recorded research run. Display formatting adapted for the portfolio. This is a sample, not a literary-quality certification."
+}
