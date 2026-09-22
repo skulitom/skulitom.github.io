@@ -1,0 +1,17 @@
+{
+  "title": "Live connectome activity beside a Straw Bale figure-eight flight",
+  "date": "2026-09-20",
+  "duration_s": 49.05,
+  "fps": 20,
+  "model_neurons": 30000,
+  "controller": "artifacts/ftPath2_best.pt",
+  "controller_sha256": "fecdd56bb0ce45ec800c21d1aafbc10954eba6bac604eff388aa25395db494e5",
+  "graph_sha256": "db429c4d4ed151d905467ac0ff474c3cb11f4dbe6b42bb5f490e1d438b2e64b7",
+  "source_commit": "51a0c84ed97d005efc523e54b0ac238c277b976c",
+  "drone": "[Copy] New Drone",
+  "mode": "Live autonomous motor control with a scripted moving target and yaw assistance",
+  "navigation_v02_used": false,
+  "activity": "Live model firing-rate state; colour identifies population; brightness is relative to recent per-neuron baseline",
+  "synchronization": "Brain panel samples the latest pilot state alongside screen capture; camera/telemetry delay is uncalibrated",
+  "video_sha256": "f7a3d3295d333d1b2597ee3717b4031947bbb381ccf0bd9d569fd361075eff8b"
+}

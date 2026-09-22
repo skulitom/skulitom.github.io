@@ -9,12 +9,14 @@ import { Life, SIZE } from './life.js';
   const header = document.querySelector('.site-header');
   const navigationLinks = [...document.querySelectorAll('.site-header nav a')];
   const sections = navigationLinks.map(link => document.querySelector(link.hash));
+  const motionButton = document.querySelector('.motion-toggle');
   let motionEnabled = !reducedMotion.matches;
   let syncCanvas = () => {};
   let syncVideo = () => {};
 
   function applyMotionPreference() {
     document.body.dataset.motion = motionEnabled ? 'on' : 'off';
+    if (motionButton) motionButton.textContent = motionEnabled ? 'Pause motion' : 'Resume motion';
     syncCanvas();
     syncVideo();
   }
@@ -24,6 +26,13 @@ import { Life, SIZE } from './life.js';
     applyMotionPreference();
   });
   applyMotionPreference();
+  if (motionButton) {
+    motionButton.hidden = false;
+    motionButton.addEventListener('click', () => {
+      motionEnabled = !motionEnabled;
+      applyMotionPreference();
+    });
+  }
 
   const preview = document.querySelector('.project-video');
   const previewButton = document.querySelector('.video-toggle');

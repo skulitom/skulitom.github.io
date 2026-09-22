@@ -27,4 +27,12 @@ The Google Play images were retrieved on 11 September 2026 and converted to WebP
 
 The app icons remain visible in compact cards. Existing app screenshots and toolkit SVGs remain available for previously cached pages.
 
-- `assets/haltere-liftoff-race.mp4`: the unmodified latest [Liftoff lap-following recording](https://github.com/skulitom/haltere/blob/main/docs/liftoff_race.mp4). `assets/haltere-liftoff-race.png` is a frame at 15 seconds, extracted without cropping or visual changes and shared with the GitHub profile. Native controls start playback on request; the static poster loads first. MIT notice: `assets/HALTERE-LICENSE.txt`. The previous hover video remains available for cached pages.
+- `assets/haltere-liftoff-race.mp4`: the unmodified historical [Liftoff lap-following recording](https://github.com/skulitom/haltere/blob/main/docs/liftoff_race.mp4). `assets/haltere-liftoff-race.png` is a frame at 15 seconds, extracted without cropping or visual changes and shared with the GitHub profile. Native controls start playback on request; the static poster loads first. MIT notice: `assets/HALTERE-LICENSE.txt`. The previous hover video remains available for cached pages.
+
+## 22 September 2026 refresh
+
+The Haltere preview now uses the [20 September figure-eight recording](https://github.com/skulitom/haltere/releases/tag/navigation-v0.2.0): 49.05 seconds of Liftoff flight beside live model activity. It uses the published `ftPath2` motor controller, a scripted moving target, and yaw assistance. It does not demonstrate the newer experimental controller or the navigation forecaster. The new PNG is the unaltered frame at 15 seconds. The original video SHA-256 is `f7a3d3295d333d1b2597ee3717b4031947bbb381ccf0bd9d569fd361075eff8b`. Haltere's MIT notice is retained.
+
+The existing Primordia reel and poster show its four original worlds; the project now also includes Symbiosis. Earlier assets remain available for cached pages.
+
+`assets/portfolio-social-20260922.png` is a browser screenshot of this portfolio’s introduction with its static artificial-life fallback, for link previews.

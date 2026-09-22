@@ -9,13 +9,20 @@
 <meta content="London-based software engineer working across backend infrastructure, distributed systems, and applied AI. Explore LitHarness, my main project, alongside agent tooling and learned control systems." name="description"/>
 <meta content="website" property="og:type"/>
 <meta content="Artem Skulimovskiy — Software Engineer" property="og:title"/>
-<meta content="Backend infrastructure, distributed systems, and applied AI. LitHarness and selected open-source work." property="og:description"/>
+<meta content="Backend infrastructure, distributed systems, and applied AI. LitHarness, agent tooling, learned control, and interactive experiments." property="og:description"/>
 <meta content="https://skulitom.github.io/" property="og:url"/>
+<meta content="Artem Skulimovskiy" property="og:site_name"/>
+<meta content="en_GB" property="og:locale"/>
+<meta content="https://skulitom.github.io/assets/portfolio-social-20260922.png" property="og:image"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="630" property="og:image:height"/>
+<meta content="Artem Skulimovskiy — software engineer in London. Backend infrastructure, distributed systems, and applied AI." property="og:image:alt"/>
+<meta content="summary_large_image" name="twitter:card"/>
 <link href="https://skulitom.github.io/" rel="canonical"/>
 <link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
 <link as="font" crossorigin="" href="assets/fonts/inter-latin-v2.woff2" rel="preload" type="font/woff2"/>
-<link href="styles.css?v=9" rel="stylesheet"/>
-<script src="script.js?v=4" type="module"></script>
+<link href="styles.css?v=10" rel="stylesheet"/>
+<script src="script.js?v=5" type="module"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -42,7 +49,7 @@
 <img alt="" aria-hidden="true" class="study-fallback" height="560" src="assets/artificial-life.webp" width="560"/>
 <canvas aria-hidden="true" height="560" id="life-canvas" width="560"></canvas>
 </div>
-<div class="study-controls"><button class="seed-life" hidden="" type="button"><span aria-hidden="true">+</span> Seed life</button><button aria-label="Reset artificial life" class="reset-life" hidden="" type="button"><span aria-hidden="true">↻</span> Reset</button></div>
+<div class="study-controls"><button class="motion-toggle" hidden="" type="button">Pause motion</button><button class="seed-life" hidden="" type="button"><span aria-hidden="true">+</span> Seed life</button><button aria-label="Reset artificial life" class="reset-life" hidden="" type="button"><span aria-hidden="true">↻</span> Reset</button></div>
 </div>
 </section>
 <section aria-labelledby="work-title" class="work section wrap" id="work">
@@ -81,18 +88,18 @@
 <p class="project-category">Learned control &amp; simulation</p><h3 id="haltere-title"><a href="https://github.com/skulitom/haltere">Haltere</a></h3>
 </header>
 <div class="project-media">
-<video aria-label="Haltere following a taught race lap in Liftoff, with live neural activity" class="flight-video" controls="" height="720" muted="" playsinline="" poster="assets/haltere-liftoff-race.png" preload="none" width="1928">
-<source src="assets/haltere-liftoff-race.mp4" type="video/mp4"/>
-<a href="assets/haltere-liftoff-race.mp4">Watch the Haltere flight recording</a>
+<video aria-label="Haltere flying a scripted figure-eight in Liftoff with yaw assistance, beside live neural activity" class="flight-video" controls="" height="720" muted="" playsinline="" poster="assets/haltere-figure8-20260920.png" preload="none" width="1928">
+<source src="assets/haltere-figure8-20260920.mp4" type="video/mp4"/>
+<a href="assets/haltere-figure8-20260920.mp4">Watch the Haltere flight recording</a>
 </video>
-<p class="media-caption">Latest lap-following recording in Liftoff, with live neural activity alongside the game view.</p>
+<p class="media-caption">20 September 2026: a scripted figure-eight with yaw assistance, beside live neural activity. This clip shows the published motor controller.</p>
 </div>
 <div class="project-copy">
 <p>A connectome-constrained recurrent network trained to fly a drone in Liftoff. Its 30,000-neuron flight circuit uses fruit-fly connectivity, with learned parameters and a differentiable PyTorch simulator.</p>
-<p class="project-result">Recorded Liftoff path following: 1.5 m/s with 0.67 m mean error.</p>
-<p class="project-note">Research prototype in a drone simulator. It follows taught paths; racing speed remains limited.</p>
+<p class="project-result">As of 22 September 2026, an experimental controller with visual race-cue assistance has completed three-lap races on two seen courses.</p>
+<p class="project-note">Research prototype. These results use explicit pilot assistance; completion on unseen courses and freestyle flight remain unproven.</p>
 <ul aria-label="Haltere technologies" class="tags"><li>Python</li><li>PyTorch</li><li>Differentiable simulation</li></ul>
-<div class="project-links"><a href="https://github.com/skulitom/haltere#results">Results &amp; source <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/haltere/releases">Models &amp; recordings</a></div>
+<div class="project-links"><a href="https://github.com/skulitom/haltere#current-status">Results &amp; source <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/haltere/releases">Models &amp; recordings</a></div>
 </div>
 </article>
 
@@ -123,9 +130,9 @@
 <div class="project-copy">
 <p class="project-category">GPU simulation &amp; artificial life</p>
 <h3><a href="https://github.com/skulitom/primordia">Primordia</a></h3>
-<p>An artificial-life laboratory for Physarum, Particle Life, Lenia, and reaction–diffusion. Four systems, 36 presets, interactive controls, and headless image and video export.</p>
+<p>A GPU artificial-life laboratory with five worlds and 42 presets. Physarum, Particle Life, Lenia, and reaction–diffusion are joined by Symbiosis, which couples agents and chemistry. Includes saved worlds, live measurements, and headless image and video export.</p>
 <ul aria-label="Primordia technologies" class="tags"><li>Rust</li><li>wgpu</li><li>WGSL</li></ul>
-<div class="project-links"><a href="https://github.com/skulitom/primordia">Source code <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/primordia#the-four-worlds">View presets</a></div>
+<div class="project-links"><a href="https://github.com/skulitom/primordia">Source code <span aria-hidden="true">↗</span></a><a href="https://github.com/skulitom/primordia#the-five-worlds">View presets</a></div>
 </div>
 <div class="project-media">
 <video aria-label="Primordia simulation preview: Physarum, Particle Life, Lenia, and reaction-diffusion" class="project-video" controls="" height="450" loop="" muted="" playsinline="" poster="assets/primordia-poster.webp" preload="none" width="800">
@@ -133,36 +140,60 @@
 <a href="assets/primordia-preview.mp4">Watch the Primordia preview</a>
 </video>
 <button aria-label="Play Primordia animation" class="video-toggle" hidden="" type="button">▷</button>
+<p class="media-caption">Preview of the four original worlds. Explore Symbiosis and the current presets in the repository.</p>
 </div>
 </article>
 <h3 class="other-projects-title">More to explore</h3>
-<div class="live-projects">
+<div class="explore-grid">
 <article class="project-row" data-reveal="">
-<p class="project-category">Live web app</p><h4><a href="https://skulitom.github.io/chinese-touch-typing/">Chinese Touch Typing <span aria-hidden="true">↗</span></a></h4>
-<p>Practise Mandarin pinyin typing with adaptive difficulty, pronunciation audio, and Simplified/Traditional characters.</p>
-<div class="project-links"><a aria-label="Open Chinese Touch Typing" href="https://skulitom.github.io/chinese-touch-typing/">Open app <span aria-hidden="true">↗</span></a><a aria-label="Chinese Touch Typing source code" href="https://github.com/skulitom/chinese-touch-typing">Source code</a></div>
+<p class="project-category">Music library tools</p><h4><a href="https://skulitom.github.io/spotify-library-vault/">Keepsake <span aria-hidden="true">↗</span></a></h4>
+<p>Save Spotify library metadata in portable formats, with an optional local companion for matching and migration to YouTube Music.</p>
+<div class="project-links"><a aria-label="Open Keepsake" href="https://skulitom.github.io/spotify-library-vault/">Open app <span aria-hidden="true">↗</span></a><a aria-label="Keepsake source code" href="https://github.com/skulitom/spotify-library-vault">Source code <span aria-hidden="true">↗</span></a></div>
 </article>
 <article class="project-row" data-reveal="">
-<p class="project-category">Live web app</p><h4><a href="https://skulitom.github.io/chinese-radicals/">Chinese Radicals <span aria-hidden="true">↗</span></a></h4>
-<p>Practise radicals and common Chinese characters with pinyin and meaning quizzes, spaced repetition, and mastery tracking.</p>
-<div class="project-links"><a aria-label="Open Chinese Radicals" href="https://skulitom.github.io/chinese-radicals/">Open app <span aria-hidden="true">↗</span></a><a aria-label="Chinese Radicals source code" href="https://github.com/skulitom/chinese-radicals">Source code</a></div>
+<p class="project-category">Agent perception &amp; control</p><h4><a href="https://github.com/skulitom/Ganglion">Ganglion <span aria-hidden="true">↗</span></a></h4>
+<p>Screen perception and closed-loop cursor control over MCP, with experimental fly-connectome motor proposals checked by a deterministic supervisor.</p>
+<div class="project-links"><a aria-label="Ganglion source code" href="https://github.com/skulitom/Ganglion">Source code <span aria-hidden="true">↗</span></a></div>
 </article>
-</div>
-<div class="more-projects">
 <article class="project-row" data-reveal="">
-<p class="project-category">Maps &amp; modelling</p><h4><a href="https://skulitom.github.io/london-time-map/">London in minutes <span aria-hidden="true">↗</span></a></h4>
-<p>A map comparing approximate travel times across walking, rail, buses, and driving.</p>
-<ul class="tags"><li>JavaScript</li><li>D3</li><li>Canvas</li></ul>
+<p class="project-category">Language &amp; agent experiments</p><h4><a href="https://github.com/skulitom/glossia">Glossia <span aria-hidden="true">↗</span></a></h4>
+<p>Explore branching language families, trace word ancestry, and compare communication protocols in controlled Codex and Claude experiments.</p>
+<div class="project-links"><a aria-label="Glossia source code" href="https://github.com/skulitom/glossia">Source code <span aria-hidden="true">↗</span></a></div>
+</article>
+<article class="project-row" data-reveal="">
+<p class="project-category">Developer tools</p><h4><a href="https://skulitom.github.io/unsung/">Unsung <span aria-hidden="true">↗</span></a></h4>
+<p>Discover overlooked repositories through evidence from tests, releases, and documentation. Includes a command-line tool and a browser explorer.</p>
+<div class="project-links"><a aria-label="Open Unsung" href="https://skulitom.github.io/unsung/">Open app <span aria-hidden="true">↗</span></a><a aria-label="Unsung source code" href="https://github.com/skulitom/unsung">Source code <span aria-hidden="true">↗</span></a></div>
+</article>
+<article class="project-row" data-reveal="">
+<p class="project-category">Languages &amp; geography</p><h4><a href="https://skulitom.github.io/MapLanguageVisualizer/">World Language Map <span aria-hidden="true">↗</span></a></h4>
+<p>Explore official languages and language families across countries, compare overlapping languages, and share the current map view.</p>
+<div class="project-links"><a aria-label="Open World Language Map" href="https://skulitom.github.io/MapLanguageVisualizer/">Open app <span aria-hidden="true">↗</span></a><a aria-label="World Language Map source code" href="https://github.com/skulitom/MapLanguageVisualizer">Source code <span aria-hidden="true">↗</span></a></div>
 </article>
 <article class="project-row" data-reveal="">
 <p class="project-category">Global trade</p><h4><a href="https://skulitom.github.io/export-atlas/">Export Atlas <span aria-hidden="true">↗</span></a></h4>
 <p>Compare countries, goods and services, and export markets using UN Comtrade and World Bank data.</p>
-<ul class="tags"><li>JavaScript</li><li>UN Comtrade</li><li>World Bank</li></ul>
+<div class="project-links"><a aria-label="Open Export Atlas" href="https://skulitom.github.io/export-atlas/">Open app <span aria-hidden="true">↗</span></a><a aria-label="Export Atlas source code" href="https://github.com/skulitom/export-atlas">Source code <span aria-hidden="true">↗</span></a></div>
+</article>
+<article class="project-row" data-reveal="">
+<p class="project-category">Maps &amp; modelling</p><h4><a href="https://skulitom.github.io/london-time-map/">London in minutes <span aria-hidden="true">↗</span></a></h4>
+<p>Compare approximate travel times across London by walking, rail, bus, and car.</p>
+<div class="project-links"><a aria-label="Open London in minutes" href="https://skulitom.github.io/london-time-map/">Open app <span aria-hidden="true">↗</span></a><a aria-label="London in minutes source code" href="https://github.com/skulitom/london-time-map">Source code <span aria-hidden="true">↗</span></a></div>
+</article>
+<article class="project-row" data-reveal="">
+<p class="project-category">Language learning</p><h4><a href="https://skulitom.github.io/chinese-touch-typing/">Chinese Touch Typing <span aria-hidden="true">↗</span></a></h4>
+<p>Practise Mandarin pinyin typing with adaptive difficulty, pronunciation audio, and Simplified/Traditional characters.</p>
+<div class="project-links"><a aria-label="Open Chinese Touch Typing" href="https://skulitom.github.io/chinese-touch-typing/">Open app <span aria-hidden="true">↗</span></a><a aria-label="Chinese Touch Typing source code" href="https://github.com/skulitom/chinese-touch-typing">Source code <span aria-hidden="true">↗</span></a></div>
+</article>
+<article class="project-row" data-reveal="">
+<p class="project-category">Language learning</p><h4><a href="https://skulitom.github.io/chinese-radicals/">Chinese Radicals <span aria-hidden="true">↗</span></a></h4>
+<p>Practise radicals and common Chinese characters with pinyin and meaning quizzes, spaced repetition, and mastery tracking.</p>
+<div class="project-links"><a aria-label="Open Chinese Radicals" href="https://skulitom.github.io/chinese-radicals/">Open app <span aria-hidden="true">↗</span></a><a aria-label="Chinese Radicals source code" href="https://github.com/skulitom/chinese-radicals">Source code <span aria-hidden="true">↗</span></a></div>
 </article>
 <article class="project-row" data-reveal="">
 <p class="project-category">Generative models</p><h4><a href="https://github.com/skulitom/Latent-Space-Explorer">Latent Space Explorer <span aria-hidden="true">↗</span></a></h4>
 <p>An experiment in steering generative images through semantic directions, with keyboard navigation.</p>
-<ul class="tags"><li>Flux</li><li>PyTorch</li><li>Pygame</li></ul>
+<div class="project-links"><a aria-label="Latent Space Explorer source code" href="https://github.com/skulitom/Latent-Space-Explorer">Source code <span aria-hidden="true">↗</span></a></div>
 </article>
 </div>
 </section>

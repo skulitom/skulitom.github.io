@@ -24,3 +24,5 @@ For a local preview, serve this directory with any static HTTP server, for examp
 The `Publish portfolio` GitHub Actions workflow publishes pushes to `main` automatically. It packages only `index.html`, `styles.css`, `script.js`, `life.js`, `.nojekyll`, and `assets/`, then deploys them to GitHub Pages. GitHub Pages is configured to use GitHub Actions as its publishing source.
 
 Keep personal contact details and private CV documents out of this public repository. Update image filenames when replacing screenshots if an old version remains cached.
+
+The Pause motion control stops the artificial-life animation and automatic video playback; Resume motion restores them. The system reduced-motion preference sets the initial state. Supporting projects share responsive rows, and social metadata uses a local screenshot of the introduction. Verify dated project results and repository section links when updating content.
