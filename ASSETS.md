@@ -40,3 +40,9 @@ The existing Primordia reel and poster show its four original worlds; the projec
 ## LitHarness writing sample
 
 `litharness.html` and `assets/litharness/the-last-anchorage-chapter-1.txt` reproduce the AI-generated opening chapter from the 19 September 2026 full-book trial, with no editorial changes. Its normalized text SHA-256 is `e5148af764c34039f371636f2cfabd19526f29f8c03804a72c5cc9e864909af0`, matching `books.A1.scene_hashes.scene-1` in the [published evidence](https://github.com/skulitom/LitHarness/blob/526ab8266f33d16bff475625b0d19a698a53731e/research/quality-measurement/full-book-trial-20260919/evidence.json). The public [run record](https://github.com/skulitom/LitHarness/blob/526ab8266f33d16bff475625b0d19a698a53731e/research/quality-measurement/full-book-trial-20260919/RESULTS.md) describes the complete draft and its recovery/quality limitations. Formatting is adapted for the portfolio. `assets/litharness/sample-provenance.json` records source and download checksums.
+
+## 8 October 2026 refresh
+
+`assets/haltere-brain11-round6-20260929.jpg` is the unaltered frame at 15 seconds from [Haltere’s fast-brain-11 round-6 Minus Two recording](https://github.com/skulitom/haltere/releases/download/fast-brain-11-experimental/fast-brain11-minus-two-hairpin-pass-round6.mp4), published 29 September 2026. It shows connectome activity beside assisted gameplay. This development run later crashed and is not a completed race. Haltere’s MIT notice is retained.
+
+`assets/haltere-brain11-round6-20260929.mp4` is the unmodified release recording above, with native playback controls and no autoplay. Previous recordings remain available for cached pages.

@@ -28,3 +28,7 @@ Keep personal contact details and private CV documents out of this public reposi
 The Pause motion control stops the artificial-life animation and automatic video playback; Resume motion restores them. The system reduced-motion preference sets the initial state. Supporting projects share responsive rows, and social metadata uses a local screenshot of the introduction. Verify dated project results and repository section links when updating content.
 
 `litharness.html` is the outcome-focused walkthrough and unedited opening-chapter sample. The publishing workflow includes this page explicitly. Its chapter text and provenance are in `assets/litharness/`; preserve the source wording when changing presentation. The six additional experiments are in a native `<details>` disclosure that also works without JavaScript. LinkedIn is linked from Experience and the footer.
+
+## Content review: 8 October 2026
+
+The home page and LitHarness walkthrough describe the rebuilt brief/bible/chapter workflow. The 19 September writing sample and trial metrics remain unchanged and are explicitly attributed to the previous implementation. The supporting rows feature PixelForge, Looking Glass, Cutbolt, and Keepsake. Check both README and release evidence when refreshing Haltere: the 29 September fast-brain-11 recording is a development flight, while the completed race result belongs to fast-brain-08.
