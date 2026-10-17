@@ -32,3 +32,7 @@ The Pause motion control stops the artificial-life animation and automatic video
 ## Content review: 8 October 2026
 
 The home page and LitHarness walkthrough describe the rebuilt brief/bible/chapter workflow. The 19 September writing sample and trial metrics remain unchanged and are explicitly attributed to the previous implementation. The supporting rows feature PixelForge, Looking Glass, Cutbolt, and Keepsake. Check both README and release evidence when refreshing Haltere: the 29 September fast-brain-11 recording is a development flight, while the completed race result belongs to fast-brain-08.
+
+## Positioning
+
+Lead with agentic engineering and tools for agents. Anode is featured, followed by Inkbolt, Cutbolt, Pixelbolt, and Nestbolt. Keep AgentUI compact, with LitHarness under agent workflows and research below the tools. Preserve the existing dark palette, typography, motion controls, and project media.

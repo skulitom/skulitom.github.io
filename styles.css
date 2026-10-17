@@ -449,3 +449,7 @@ html:has(body[data-motion='off']) { scroll-behavior: auto; }
   .run-example { padding: 22px; margin-block: 28px 44px; }
   .chapter-prose { font-size: 1.125rem; line-height: 1.85; }
 }
+
+/* Agent tools share the existing project palette and frames. */
+.tool-family-note { margin-top: 28px; max-width: 75ch; color: var(--muted); }
+.tool-family-note a { color: var(--mint); text-decoration: underline; text-underline-offset: 4px; }
