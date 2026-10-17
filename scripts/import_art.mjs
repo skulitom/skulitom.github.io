@@ -2,15 +2,16 @@
 // Usage: node scripts/import_art.mjs <profile-art folder> [Pixelbolt checkout]
 // The profile-art folder holds one finished piece per subfolder (hero/, anode/, inkbolt/, cutbolt/, pixelbolt-card/,
 // nestbolt/), each built by its own build.sh. Nothing here draws pixels: Pixelbolt renders every sheet, and this
-// script only splits the phone hero's effects recipe into the layers a click can re-simulate, then copies files.
+// script only splits the phone hero's effects recipe into the layers a click can re-simulate (cutting the mostly
+// still front layer into a still and its small moving part), then copies files.
 import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const [artDir, pixelboltDir = path.join(artDir ?? '', 'Pixelbolt')] = process.argv.slice(2);
 if (!artDir) { console.error('Usage: node scripts/import_art.mjs <profile-art folder> [Pixelbolt checkout]'); process.exit(1); }
-const site = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..');
+const site = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const pb = await import(pathToFileURL(path.join(pixelboltDir, 'src', 'index.js')).href);
 const { renderProject, buildAtlas, encodePNG, decodePNG, resolveReferences } = pb;
 const readJSON = file => JSON.parse(readFileSync(file, 'utf8'));
@@ -60,12 +61,34 @@ const recipes = {
 };
 const place = { steam: [steam0.x, steam0.y + FX_Y], liquid: [liquid0.x, liquid0.y + FX_Y], top: [0, FX_Y] };
 const rendered = {};
-for (const [name, recipe] of Object.entries(recipes)) {
-  const project = renderProject(recipe), atlas = buildAtlas(project);
-  rendered[name] = project;
+for (const [name, recipe] of Object.entries(recipes)) rendered[name] = renderProject(recipe);
+for (const name of ['steam', 'liquid']) {
+  const atlas = buildAtlas(rendered[name]);
   write(path.join(out, `${name}.png`), encodePNG(atlas.data, atlas.width, atlas.height));
   write(path.join(out, `${name}.atlas.json`), json(atlas.metadata));
 }
+// The front layer barely moves (a flame, cursors, an ember, the drip): ship frame 0 with the moving box cleared, plus
+// that box from every frame as one strip. Drawn in that order they give each frame exactly.
+const topFrames = rendered.top.frames.map(frame => frame.data), TW = rendered.top.width, TH = rendered.top.height;
+let [left, top, right, bottom] = [TW, TH, -1, -1];
+for (let y = 0; y < TH; y++) for (let x = 0; x < TW; x++) {
+  const k = (y * TW + x) * 4;
+  if (topFrames.some(data => data[k] !== topFrames[0][k] || data[k + 1] !== topFrames[0][k + 1] || data[k + 2] !== topFrames[0][k + 2] || data[k + 3] !== topFrames[0][k + 3])) {
+    left = Math.min(left, x); right = Math.max(right, x); top = Math.min(top, y); bottom = Math.max(bottom, y);
+  }
+}
+const moving = { x: left, y: top, width: right - left + 1, height: bottom - top + 1 };
+const still0 = Uint8ClampedArray.from(topFrames[0]);
+for (let y = moving.y; y < moving.y + moving.height; y++) still0.fill(0, (y * TW + moving.x) * 4, (y * TW + moving.x + moving.width) * 4);
+const strip = new Uint8ClampedArray(moving.width * moving.height * topFrames.length * 4);
+topFrames.forEach((data, i) => {
+  for (let y = 0; y < moving.height; y++) {
+    const from = ((moving.y + y) * TW + moving.x) * 4;
+    strip.set(data.subarray(from, from + moving.width * 4), ((i * moving.height + y) * moving.width) * 4);
+  }
+});
+write(path.join(out, 'top-still.png'), encodePNG(still0, TW, TH));
+write(path.join(out, 'top-moving.png'), encodePNG(strip, moving.width, moving.height * topFrames.length));
 const bg = renderProject(bgRecipe).frames[0];
 write(path.join(out, 'bg.png'), encodePNG(bg.data, bg.width ?? bgRecipe.width, bg.height ?? bgRecipe.height));
 
@@ -82,7 +105,9 @@ function over(target, layer, lw, lh, x0, y0) {
 const official = renderProject(fxRecipe);
 const composites = official.frames.map((frame, i) => {
   const mine = Uint8ClampedArray.from(bg.data), theirs = Uint8ClampedArray.from(bg.data);
-  for (const name of ['steam', 'liquid', 'top']) over(mine, rendered[name].frames[i].data, rendered[name].width, rendered[name].height, ...place[name]);
+  for (const name of ['steam', 'liquid']) over(mine, rendered[name].frames[i].data, rendered[name].width, rendered[name].height, ...place[name]);
+  over(mine, still0, TW, TH, ...place.top);
+  over(mine, strip.subarray(i * moving.width * moving.height * 4, (i + 1) * moving.width * moving.height * 4), moving.width, moving.height, place.top[0] + moving.x, place.top[1] + moving.y);
   over(theirs, frame.data, official.width, official.height, 0, FX_Y);
   if (!mine.every((v, k) => v === theirs[k])) throw new Error(`split layers differ from the approved effects at frame ${i}`);
   return mine;
@@ -98,7 +123,7 @@ const steamEffect = Object.values(steamFluid.effects)[0], flaskEffect = Object.v
 const vent = steamEffect.emitters.find(e => e.name === 'breath').at, fill = flaskEffect.fill[0];
 write(path.join(out, 'hero.json'), json({
   width: W, height: H, frames: official.frames.length, duration: official.frames[0].duration, still,
-  layers: Object.fromEntries(Object.entries(place).map(([name, [x, y]]) => [name, { x, y, width: rendered[name].width, height: rendered[name].height }])),
+  layers: Object.fromEntries(Object.entries(place).map(([name, [x, y]]) => [name, { x, y, width: rendered[name].width, height: rendered[name].height, ...(name === 'top' && { moving }) }])),
   // Where a click lands in each fluid's own canvas: the steam vent (neck mouth) and the flask's bulb.
   steam: { source: 'steam.fluid.json', effect: Object.keys(steamFluid.effects)[0], vent },
   liquid: { source: 'flask.fluid.json', effect: Object.keys(flaskFluid.effects)[0], bulb: { at: fill.at, radius: fill.radius } },

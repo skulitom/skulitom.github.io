@@ -1,16 +1,17 @@
 /* The portfolio's pixel art: a live fluid hero and five tool cards, all made with Pixelbolt.
- * Sheets are drawn with Pixelbolt's own canvas player at whole-number device-pixel scales. A click on the hero's
+ * Sheets are drawn with Pixelbolt's own canvas player at whole device pixels per art pixel. A click on the hero's
  * flask or steam re-runs that fluid's source with one extra emitter in a worker (Pixelbolt's compiler and renderer),
  * then dissolves the new loop in through a Bayer mask, so every pixel stays a palette colour. Nothing here runs
  * until the page has painted its static stills, and nothing animates offscreen, in background tabs, or with motion off.
+ * Frames are 70 ms, so each player paints only when its frame changes: at most about 14 times a second.
  */
 import { loadSpriteSheet, drawFrame, frameAt } from '../pixelbolt/src/runtime.js';
 
-const PAINT_INTERVAL = 1000 / 30;
+const VERSION = 2;                    // bump with the art so caches never pair new data with old
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const players = new Set();
 let motion = () => true;
-let frameRequest = 0, lastPaint = 0;
+let frameRequest = 0;
 
 function schedule() {
   if (frameRequest) return;
@@ -18,10 +19,7 @@ function schedule() {
 }
 function tick(now) {
   frameRequest = 0;
-  if (now - lastPaint >= PAINT_INTERVAL - 2) {
-    lastPaint = now;
-    for (const player of players) if (player.running()) player.advance(now);
-  }
+  for (const player of players) if (player.running()) player.advance(now);
   schedule();
 }
 
@@ -38,10 +36,14 @@ function loadImage(url) {
     image.src = url;
   });
 }
+const versioned = url => { const u = new URL(url, document.baseURI); u.searchParams.set('v', VERSION); return u.href; };
 const whenVisible = (element, callback, rootMargin = '0px') => {
   if (!('IntersectionObserver' in window)) { callback(true); return; }
-  new IntersectionObserver(([entry]) => callback(entry.isIntersecting), { rootMargin }).observe(element);
+  new IntersectionObserver(entries => callback(entries.at(-1).isIntersecting), { rootMargin }).observe(element);
 };
+const ratio = () => window.devicePixelRatio || 1;
+// The largest whole number of device pixels per art pixel that fits `room` CSS pixels.
+const fitScale = (room, size) => Math.max(1, Math.floor(room * ratio() / size + 1e-6));
 
 // One frame of any drawable layer, read back as RGBA through a scratch canvas.
 const [scratch, scratchContext] = makeCanvas(1, 1, true);
@@ -84,6 +86,7 @@ const EMITTERS = {
 const SETTINGS = { steam: { warmup: 1, iterations: 16 }, liquid: { warmup: 1 } };
 const LONGEST = { steam: 9, liquid: 12 };     // frames the visitor's emitters span (windows can't wrap the loop)
 const SHOW = { steam: 12, liquid: 19 };       // frames after the start that make the best still
+const STILL_STARTS = [6, 22, 38, 66];         // with motion off, each press shows a different moment
 const DISSOLVE = 4;
 
 async function mountHero(figure) {
@@ -91,13 +94,16 @@ async function mountHero(figure) {
   const status = figure.querySelector('.hero-status');
   const buttons = { liquid: figure.querySelector('.stir-flask'), steam: figure.querySelector('.add-heat') };
   const base = new URL('hero/', import.meta.url);
-  const hero = await (await fetch(new URL('hero.json', base))).json();
+  const file = name => versioned(new URL(name, base));
+  const response = await fetch(file('hero.json'));
+  if (!response.ok) throw new Error(`hero.json: HTTP ${response.status}`);
+  const hero = await response.json();
   const { width: W, height: H, frames: COUNT, duration: MS } = hero;
   const [art, artContext] = makeCanvas(W, H, true);
   const touch = window.matchMedia('(hover: none)').matches;
   const hint = `${touch ? 'Tap' : 'Click'} the flask or the steam to simulate it live in your browser.`;
   let canvas = null, context = null, layers = null, loading = null, worker = null, pending = null;
-  let time = hero.still * MS, last = 0, visible = false, busy = false, request = 0, spin = 1;
+  let time = hero.still * MS, last = 0, visible = false, busy = false, request = 0, spin = 1, presses = 0;
   // How long a re-simulation takes here, so the visitor's event can start just after the result arrives.
   const estimate = { steam: 1100, liquid: 550 };
   // A dissolve into a new loop: from the old layer (still animating) or, after a jump, a frozen frame.
@@ -115,27 +121,33 @@ async function mountHero(figure) {
     stripContext.putImageData(new ImageData(pixels, width, height * count), 0, 0);
     return (target, i, x, y) => target.drawImage(strip, 0, i * height, width, height, x, y, width, height);
   };
+  // The front layer is one still plus the small box that moves, drawn over it.
+  const frontLayer = (still, moving, box) => (target, i, x, y) => {
+    target.drawImage(still, x, y);
+    target.drawImage(moving, 0, i * box.height, box.width, box.height, x + box.x, y + box.y, box.width, box.height);
+  };
 
   function load() {
     loading ??= (async () => {
-      const [bg, steam, liquid, top] = await Promise.all([
-        loadImage(new URL('bg.png', base).href),
-        ...['steam', 'liquid', 'top'].map(name => loadSpriteSheet(new URL(`${name}.atlas.json`, base).href))
+      const [bg, steam, liquid, still, moving] = await Promise.all([
+        loadImage(file('bg.png')),
+        loadSpriteSheet(file('steam.atlas.json')), loadSpriteSheet(file('liquid.atlas.json')),
+        loadImage(file('top-still.png')), loadImage(file('top-moving.png'))
       ]);
-      layers = { bg, steam: sheetLayer(steam), liquid: sheetLayer(liquid), top: sheetLayer(top) };
+      layers = { bg, steam: sheetLayer(steam), liquid: sheetLayer(liquid), top: frontLayer(still, moving, hero.layers.top.moving) };
       [canvas, context] = makeCanvas(W, H);
       canvas.setAttribute('aria-hidden', 'true');
       stage.append(canvas);
       fit();
       stage.classList.add('is-ready');
-    })();
+    })().catch(error => { loading = null; throw error; });
     return loading;
   }
 
   function fit() {
     if (!canvas) return;
-    // The stage is a whole multiple of the art in CSS pixels; the canvas matches it in device pixels.
-    const scale = Math.max(1, Math.round(stage.clientWidth / W * (window.devicePixelRatio || 1)));
+    // CSS sizes the stage in whole device pixels per art pixel; the canvas matches it one to one.
+    const scale = Math.max(1, Math.round(stage.getBoundingClientRect().width * ratio() / W));
     if (canvas.width !== W * scale) { canvas.width = W * scale; canvas.height = H * scale; }
     paint();
   }
@@ -172,9 +184,12 @@ async function mountHero(figure) {
     },
     sync() {
       if (!player.running()) last = 0;
+      // Pausing mid-dissolve settles on the new loop rather than freezing a dithered mix.
+      if (!motion() && fade) { fade = null; paint(); }
       if (motion() && visible && !layers) load().then(schedule, failLoad);
       schedule();
-    }
+    },
+    fit
   };
   players.add(player);
   whenVisible(stage, isVisible => { visible = isVisible; player.sync(); });
@@ -184,16 +199,17 @@ async function mountHero(figure) {
 
   // Without the sheets the still stays; without the worker the loop keeps playing and only the caption changes.
   function failLoad() { stage.classList.remove('is-ready'); }
-  function failSimulation() {
+  function failSimulation(message = 'The live simulation is not available in this browser.') {
     setBusy(false);
-    status.textContent = 'The live simulation is not available in this browser.';
+    status.textContent = message;
   }
 
   // Each simulation gets a fresh worker, started ahead of time: a long-lived one grows slower with every compile.
+  // A worker that fails before anyone asked for a simulation is dropped quietly; the next press tries again.
   function startWorker() {
     if (worker || !window.Worker) return worker;
     try {
-      const fresh = new Worker(new URL('fluid-worker.js', import.meta.url), { type: 'module' });
+      const fresh = new Worker(versioned(new URL('fluid-worker.js', import.meta.url)), { type: 'module' });
       fresh.addEventListener('message', ({ data }) => {
         if (data.ready) fresh.postMessage({ warm: true });
         else if (pending && data.id === request) {
@@ -205,7 +221,9 @@ async function mountHero(figure) {
       fresh.addEventListener('error', event => {
         event.preventDefault();
         fresh.terminate();
-        if (worker === fresh) { worker = null; pending = null; failSimulation(); }
+        if (worker !== fresh) return;
+        worker = null;
+        if (pending) { pending = null; failSimulation(); }
       });
       worker = fresh;
     } catch { worker = null; }
@@ -218,9 +236,10 @@ async function mountHero(figure) {
     for (const button of Object.values(buttons)) button.setAttribute('aria-disabled', String(value));
   }
 
-  // Where a visitor's event starts: just after the result can arrive while playing; a quiet stretch for a still.
+  // Where a visitor's event starts: just after the result can arrive while playing; with motion off, a different
+  // moment each press.
   function startFrame(layer) {
-    let start = motion() ? (frame() + Math.ceil(estimate[layer] / MS) + 3) % COUNT : 6;
+    let start = motion() ? (frame() + Math.ceil(estimate[layer] / MS) + 3) % COUNT : STILL_STARTS[presses % STILL_STARTS.length];
     if (start > COUNT - LONGEST[layer]) start = 0;
     return start;
   }
@@ -231,20 +250,22 @@ async function mountHero(figure) {
     setBusy(true);
     status.textContent = 'Simulating in your browser…';
     const start = startFrame(layer);
+    presses += 1;
     if (layer === 'liquid') spin = at ? (at[0] < hero.liquid.bulb.at[0] ? -1 : 1) : -spin;
     const point = at ?? (layer === 'steam' ? hero.steam.vent : [hero.liquid.bulb.at[0], hero.liquid.bulb.at[1] + 11]);
     request += 1;
-    pending = { layer, start, sent: performance.now() };
+    pending = { layer, start };
     worker.postMessage({ id: request, layer, emitters: EMITTERS[layer](point, start, spin), settings: SETTINGS[layer] });
-    load().catch(failLoad);
+    load().catch(() => {});
   }
 
   async function finish(result) {
-    const { layer, start, sent } = pending;
+    const { layer, start } = pending;
     pending = null;
     if (result.error) { failSimulation(); return; }
-    estimate[layer] = (performance.now() - sent) * 1.1;
-    try { await load(); } catch { failLoad(); setBusy(false); return; }
+    // The next event is timed from the simulation itself plus a little messaging, not from a cold first start.
+    estimate[layer] = result.ms * 1.15 + 150;
+    try { await load(); } catch { failLoad(); failSimulation('The new simulation could not be shown; the still stays.'); return; }
     const old = { [layer]: layers[layer] };
     layers[layer] = stripLayer(result);
     if (motion()) {
@@ -297,11 +318,15 @@ async function mountHero(figure) {
     button.hidden = false;
     button.addEventListener('click', () => { if (button.getAttribute('aria-disabled') !== 'true') simulate(layer); });
   }
-  // Load Pixelbolt's modules when the visitor shows interest, or once the page is idle (with motion on).
-  for (const type of ['pointerenter', 'focusin', 'touchstart']) figure.addEventListener(type, startWorker, { once: true, passive: true });
-  if (motion() && !navigator.connection?.saveData) {
-    const idle = window.requestIdleCallback ?? (callback => setTimeout(callback, 2500));
-    idle(() => startWorker(), { timeout: 5000 });
+  // Load Pixelbolt's modules when the visitor shows interest, or once the hero has been on screen for a while with
+  // motion on and the page is idle.
+  for (const type of ['pointerenter', 'focusin', 'touchstart']) figure.addEventListener(type, () => startWorker(), { once: true, passive: true });
+  if (!navigator.connection?.saveData) {
+    setTimeout(() => {
+      if (!motion() || !visible || document.hidden) return;
+      const idle = window.requestIdleCallback ?? (callback => setTimeout(callback, 0));
+      idle(() => startWorker(), { timeout: 3000 });
+    }, 4000);
   }
   player.sync();
   return player;
@@ -316,16 +341,16 @@ function mountCard(link) {
   const [burstURL, burstName] = link.dataset.pixelBurst.split('#');
   let main = null, burst = null, burstLoading = null, loading = null;
   let canvas = null, context = null, art = null, artContext = null;
-  let visible = false, near = false, last = 0;
+  let visible = false, near = false, last = 0, touchCancelled = false;
   let mode = 'loop', time = 0, fade = null, shown = null;
 
   function load() {
-    loading ??= loadSpriteSheet(new URL(loopURL, document.baseURI).href).then(sheet => {
+    loading ??= loadSpriteSheet(versioned(loopURL)).then(sheet => {
       main = sheet;
       // Start on the frame the static still shows, so the swap to the canvas is invisible.
       const names = sheet.atlas.animations[loopName].frames.slice(0, Number(link.dataset.pixelStill) || 0);
       time = names.reduce((sum, name) => sum + sheet.atlas.frames[name].duration, 0);
-      const { w, h } = Object.values(sheet.atlas.frames)[0].sourceSize;
+      const { w, h } = sheet.atlas.frames[sheet.atlas.animations[loopName].frames[0]].sourceSize;
       [art, artContext] = makeCanvas(w, h, true);
       [canvas, context] = makeCanvas(w, h);
       canvas.setAttribute('aria-hidden', 'true');
@@ -333,17 +358,19 @@ function mountCard(link) {
       fit();
       link.classList.add('is-ready');
       player.sync();
-    });
+    }).catch(() => { loading = null; link.classList.remove('is-ready'); });
     return loading;
   }
+  // The same whole-device-pixel scale the CSS gives the still, so the canvas takes over at the same size.
   function fit() {
     if (!canvas) return;
     const style = getComputedStyle(link), pad = parseFloat(style.getPropertyValue('--pixel-pad')) || 0;
-    const ratio = window.devicePixelRatio || 1;
-    const scale = Math.max(1, Math.floor(Math.min((link.clientWidth - pad * 2) * ratio / art.width, (link.clientHeight - pad * 2) * ratio / art.height) + 1e-6));
+    const border = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
+    const bounds = link.getBoundingClientRect();
+    const scale = Math.min(fitScale(bounds.width - border - pad * 2, art.width), fitScale(link.clientHeight - pad * 2, art.height));
     if (canvas.width !== art.width * scale) { canvas.width = art.width * scale; canvas.height = art.height * scale; }
-    canvas.style.width = `${art.width * scale / ratio}px`;
-    canvas.style.height = `${art.height * scale / ratio}px`;
+    canvas.style.width = `${art.width * scale / ratio()}px`;
+    canvas.style.height = `${art.height * scale / ratio()}px`;
     paint(true);
   }
   const current = () => mode === 'burst'
@@ -353,10 +380,11 @@ function mountCard(link) {
     if (!canvas) return;
     const [sheet, name] = current();
     const step = fade ? Math.floor(fade.time / 70) : -1;
-    if (!force && name === shown && !fade) return;
+    if (!force && name === shown && (!fade || step === fade.shown)) return;
     shown = name;
     artContext.clearRect(0, 0, art.width, art.height);
     if (fade && step < CARD_DISSOLVE) {
+      fade.shown = step;
       const after = readFrame(c => drawFrame(c, sheet, name, 0, 0, { anchor: false }), art.width, art.height);
       artContext.putImageData(dissolve(fade.from, after, (step + 1) / (CARD_DISSOLVE + 1)), 0, 0);
     } else {
@@ -368,14 +396,13 @@ function mountCard(link) {
   }
   // Swap loops through a short dissolve from whatever is on screen now.
   function swap(nextMode) {
-    fade = { from: artContext.getImageData(0, 0, art.width, art.height), time: 0 };
+    fade = { from: artContext.getImageData(0, 0, art.width, art.height), time: 0, shown: -1 };
     mode = nextMode; time = 0; shown = null;
     paint();
   }
-  async function playBurst(event) {
-    if (event.type === 'pointerenter' && event.pointerType === 'touch') return;
+  async function playBurst() {
     if (!motion() || mode === 'burst' || !main) return;
-    burstLoading ??= loadSpriteSheet(new URL(burstURL, document.baseURI).href).then(sheet => { burst = sheet; });
+    burstLoading ??= loadSpriteSheet(versioned(burstURL)).then(sheet => { burst = sheet; }, error => { burstLoading = null; throw error; });
     try { await burstLoading; } catch { return; }
     if (!motion() || mode === 'burst') return;
     swap('burst');
@@ -392,18 +419,23 @@ function mountCard(link) {
     },
     sync() {
       if (!player.running()) last = 0;
-      if (motion() && near && !loading) load().catch(() => link.classList.remove('is-ready'));
+      if (!motion() && fade) { fade = null; paint(true); }
+      if (motion() && near && !loading) load();
       schedule();
-    }
+    },
+    fit
   };
   players.add(player);
   whenVisible(link, isNear => { near = isNear; player.sync(); }, '200px 0px');
   whenVisible(link, isVisible => { visible = isVisible; player.sync(); });
   document.addEventListener('visibilitychange', player.sync);
   if ('ResizeObserver' in window) new ResizeObserver(fit).observe(link);
-  link.addEventListener('pointerenter', playBurst);
-  link.addEventListener('pointerdown', event => { if (event.pointerType === 'touch') playBurst(event); }, { passive: true });
+  // Hover and keyboard focus play the burst; on touch screens a tap does (a scroll that starts on the card does not).
+  link.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') playBurst(); });
   link.addEventListener('focus', playBurst);
+  link.addEventListener('pointerdown', event => { if (event.pointerType === 'touch') touchCancelled = false; }, { passive: true });
+  link.addEventListener('pointercancel', () => { touchCancelled = true; }, { passive: true });
+  link.addEventListener('pointerup', event => { if (event.pointerType === 'touch' && !touchCancelled) playBurst(); }, { passive: true });
   return player;
 }
 
@@ -414,5 +446,7 @@ export function startPixelArt({ isMotionEnabled }) {
   const figure = document.querySelector('.pixel-hero');
   if (figure) mountHero(figure).then(player => mounted.push(player), () => {});
   for (const link of document.querySelectorAll('[data-pixel-loop]')) mounted.push(mountCard(link));
+  // A new device-pixel ratio (zoom, or a move to another screen) changes every whole-pixel scale.
+  window.addEventListener('dprchange', () => { for (const player of mounted) player.fit(); });
   return { sync: () => { for (const player of mounted) player.sync(); schedule(); } };
 }

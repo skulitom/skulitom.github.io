@@ -5,9 +5,12 @@ import { compileFluid } from '../pixelbolt/src/fluid.js';
 import { renderProject } from '../pixelbolt/src/core.js';
 
 const files = new Map();
+const version = new URL(import.meta.url).searchParams.get('v');
 function load(name) {
   if (!files.has(name)) {
-    files.set(name, fetch(new URL(`hero/${name}`, import.meta.url)).then(response => {
+    const url = new URL(`hero/${name}`, import.meta.url);
+    if (version) url.searchParams.set('v', version);
+    files.set(name, fetch(url).then(response => {
       if (!response.ok) throw new Error(`Could not load ${name}: HTTP ${response.status}`);
       return response.json();
     }));
