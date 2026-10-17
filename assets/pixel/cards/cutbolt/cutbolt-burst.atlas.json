@@ -1,0 +1,1628 @@
+{
+  "frames": {
+    "base": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-0": {
+      "frame": {
+        "x": 192,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-1": {
+      "frame": {
+        "x": 384,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-2": {
+      "frame": {
+        "x": 576,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-3": {
+      "frame": {
+        "x": 768,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-4": {
+      "frame": {
+        "x": 960,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-5": {
+      "frame": {
+        "x": 1152,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-6": {
+      "frame": {
+        "x": 1344,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-7": {
+      "frame": {
+        "x": 0,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-8": {
+      "frame": {
+        "x": 192,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-9": {
+      "frame": {
+        "x": 384,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-10": {
+      "frame": {
+        "x": 576,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-11": {
+      "frame": {
+        "x": 768,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-12": {
+      "frame": {
+        "x": 960,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-13": {
+      "frame": {
+        "x": 1152,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-14": {
+      "frame": {
+        "x": 1344,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-15": {
+      "frame": {
+        "x": 0,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-16": {
+      "frame": {
+        "x": 192,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-17": {
+      "frame": {
+        "x": 384,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-18": {
+      "frame": {
+        "x": 576,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-19": {
+      "frame": {
+        "x": 768,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-20": {
+      "frame": {
+        "x": 960,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-21": {
+      "frame": {
+        "x": 1152,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-22": {
+      "frame": {
+        "x": 1344,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-23": {
+      "frame": {
+        "x": 0,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-24": {
+      "frame": {
+        "x": 192,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-25": {
+      "frame": {
+        "x": 384,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-26": {
+      "frame": {
+        "x": 576,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-27": {
+      "frame": {
+        "x": 768,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-28": {
+      "frame": {
+        "x": 960,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-29": {
+      "frame": {
+        "x": 1152,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-30": {
+      "frame": {
+        "x": 1344,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-31": {
+      "frame": {
+        "x": 0,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-32": {
+      "frame": {
+        "x": 192,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-33": {
+      "frame": {
+        "x": 384,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-34": {
+      "frame": {
+        "x": 576,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-35": {
+      "frame": {
+        "x": 768,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-36": {
+      "frame": {
+        "x": 960,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-37": {
+      "frame": {
+        "x": 1152,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-38": {
+      "frame": {
+        "x": 1344,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-39": {
+      "frame": {
+        "x": 0,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-40": {
+      "frame": {
+        "x": 192,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-41": {
+      "frame": {
+        "x": 384,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-42": {
+      "frame": {
+        "x": 576,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-43": {
+      "frame": {
+        "x": 768,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-44": {
+      "frame": {
+        "x": 960,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-45": {
+      "frame": {
+        "x": 1152,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-46": {
+      "frame": {
+        "x": 1344,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-47": {
+      "frame": {
+        "x": 0,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-48": {
+      "frame": {
+        "x": 192,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-49": {
+      "frame": {
+        "x": 384,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-50": {
+      "frame": {
+        "x": 576,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-51": {
+      "frame": {
+        "x": 768,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-52": {
+      "frame": {
+        "x": 960,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-53": {
+      "frame": {
+        "x": 1152,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-54": {
+      "frame": {
+        "x": 1344,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-55": {
+      "frame": {
+        "x": 0,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-56": {
+      "frame": {
+        "x": 192,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-57": {
+      "frame": {
+        "x": 384,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-58": {
+      "frame": {
+        "x": 576,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-59": {
+      "frame": {
+        "x": 768,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-60": {
+      "frame": {
+        "x": 960,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-61": {
+      "frame": {
+        "x": 1152,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-62": {
+      "frame": {
+        "x": 1344,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-63": {
+      "frame": {
+        "x": 0,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-64": {
+      "frame": {
+        "x": 192,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-65": {
+      "frame": {
+        "x": 384,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-66": {
+      "frame": {
+        "x": 576,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-67": {
+      "frame": {
+        "x": 768,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-68": {
+      "frame": {
+        "x": 960,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-69": {
+      "frame": {
+        "x": 1152,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-70": {
+      "frame": {
+        "x": 1344,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-burst-71": {
+      "frame": {
+        "x": 0,
+        "y": 900,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    }
+  },
+  "animations": {
+    "cutbolt-burst": {
+      "frames": [
+        "cutbolt-burst-0",
+        "cutbolt-burst-1",
+        "cutbolt-burst-2",
+        "cutbolt-burst-3",
+        "cutbolt-burst-4",
+        "cutbolt-burst-5",
+        "cutbolt-burst-6",
+        "cutbolt-burst-7",
+        "cutbolt-burst-8",
+        "cutbolt-burst-9",
+        "cutbolt-burst-10",
+        "cutbolt-burst-11",
+        "cutbolt-burst-12",
+        "cutbolt-burst-13",
+        "cutbolt-burst-14",
+        "cutbolt-burst-15",
+        "cutbolt-burst-16",
+        "cutbolt-burst-17",
+        "cutbolt-burst-18",
+        "cutbolt-burst-19",
+        "cutbolt-burst-20",
+        "cutbolt-burst-21",
+        "cutbolt-burst-22",
+        "cutbolt-burst-23",
+        "cutbolt-burst-24",
+        "cutbolt-burst-25",
+        "cutbolt-burst-26",
+        "cutbolt-burst-27",
+        "cutbolt-burst-28",
+        "cutbolt-burst-29",
+        "cutbolt-burst-30",
+        "cutbolt-burst-31",
+        "cutbolt-burst-32",
+        "cutbolt-burst-33",
+        "cutbolt-burst-34",
+        "cutbolt-burst-35",
+        "cutbolt-burst-36",
+        "cutbolt-burst-37",
+        "cutbolt-burst-38",
+        "cutbolt-burst-39",
+        "cutbolt-burst-40",
+        "cutbolt-burst-41",
+        "cutbolt-burst-42",
+        "cutbolt-burst-43",
+        "cutbolt-burst-44",
+        "cutbolt-burst-45",
+        "cutbolt-burst-46",
+        "cutbolt-burst-47",
+        "cutbolt-burst-48",
+        "cutbolt-burst-49",
+        "cutbolt-burst-50",
+        "cutbolt-burst-51",
+        "cutbolt-burst-52",
+        "cutbolt-burst-53",
+        "cutbolt-burst-54",
+        "cutbolt-burst-55",
+        "cutbolt-burst-56",
+        "cutbolt-burst-57",
+        "cutbolt-burst-58",
+        "cutbolt-burst-59",
+        "cutbolt-burst-60",
+        "cutbolt-burst-61",
+        "cutbolt-burst-62",
+        "cutbolt-burst-63",
+        "cutbolt-burst-64",
+        "cutbolt-burst-65",
+        "cutbolt-burst-66",
+        "cutbolt-burst-67",
+        "cutbolt-burst-68",
+        "cutbolt-burst-69",
+        "cutbolt-burst-70",
+        "cutbolt-burst-71"
+      ],
+      "loop": true,
+      "duration": 5040
+    }
+  },
+  "meta": {
+    "app": "Pixelbolt",
+    "version": "1",
+    "image": "cutbolt-burst.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1536,
+      "h": 1000
+    },
+    "scale": "1"
+  }
+}

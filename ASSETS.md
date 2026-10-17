@@ -52,3 +52,16 @@ The existing Primordia reel and poster show its four original worlds; the projec
 The updated header and footer and the Inkbolt, Cutbolt, Pixelbolt, and Nestbolt illustrations are original SVG artwork in the existing palette. They depict capabilities, not application screenshots. Their animations respect reduced-motion preferences. Source: the profile repository’s `scripts/generate_assets.py` and `scripts/generate_agent_assets.py`.
 
 `assets/portfolio-social-20261017.png` is a browser-rendered share card using the portfolio typography, colours, and existing static artificial-life study.
+
+## 17 October 2026 Pixelbolt pixel art
+
+The hero, the footer strip, and the Anode, Inkbolt, Cutbolt, Pixelbolt, and Nestbolt illustrations are original, decorative pixel art made with [Pixelbolt](https://github.com/skulitom/Pixelbolt) for this portfolio and the GitHub profile. Every pixel is a Pixelbolt render from editable recipes: the liquids and smoke are Pixelbolt fluid simulations (FLIP liquid and stable-fluid gas), shaded and framed with Pixelbolt's drawing operations in one shared palette. They depict each tool's idea, not application screenshots.
+
+- `assets/pixel/hero/wide/` and `assets/pixel/hero/narrow/`: the hero, a night workbench, in two crops. `wide` is the desktop hero from x 182 (234 × 162: the window, the coil, the flask and the monitor); `narrow` is the phone composition from y 50 (156 × 130). Each holds a still background (`bg.png`), the steam and liquid as 96-frame sprite sheets with Pixelbolt atlases, the mostly still groups as `*-still.png` plus `*-moving.png` (the box that changes, one strip of 96 frames), and `still.png` (frame 50). All are cut from the piece's recipes and checked to recombine to the approved hero exactly. The `*.fluid.json` files are the piece's own fluid sources with the shared palette inlined; `hero.json` holds the layer positions, the vent, the bulb, the plume's usual box, the art's biggest billows, and the recipe operations the steam layer adds on top of the gas.
+- `assets/pixel/footer/`: the footer strip under the same bench (416 × 42): its two still halves stacked as `bg.png`, a 48-frame Pixelbolt sheet for the dish and the drip, and `still.png` (frame 24).
+- `assets/pixel/cards/<tool>/`: each card's Pixelbolt sheet and atlas (72-frame loop), its hover burst, and its still frame.
+- `assets/pixelbolt/`: Pixelbolt's `fluid.js`, `core.js`, `authoring.js`, `craft.js`, `autotile.js`, `font.js`, and `runtime.js`, copied unmodified from commit `8c5f662` (see `SOURCE.txt`), under Pixelbolt's MIT licence (`assets/pixelbolt/LICENSE`). The page uses `runtime.js` to draw the sheets and the others to re-simulate and render the hero's fluids in the visitor's browser.
+
+`assets/portfolio-social-pixel-20261017.png` is the 1280 × 640 link preview: the profile README's header still (`assets/v4/hero-still.svg` in the profile repository: this Pixelbolt hero with the name and tagline as vector text) rendered at 3× on `#0e1423`. The earlier share images remain for cached pages.
+
+`scripts/import_art.mjs` refreshes the hero, footer and card art and the vendored modules from the art workspace. The earlier SVG illustrations (`assets/anode.svg`, `assets/*-20261017.svg`) and the artificial-life study (`life.js`, `assets/life-seed.bin`, `assets/artificial-life.webp`) remain available for cached pages.
