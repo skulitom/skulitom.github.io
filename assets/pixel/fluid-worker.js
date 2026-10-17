@@ -1,6 +1,7 @@
 /* Re-simulates one of the hero's fluids off the main thread with Pixelbolt's own compiler and renderer (vendored,
- * unmodified, in assets/pixelbolt/). The page sends the extra emitters for a click; the worker compiles the hero's
- * fluid source with them, renders the layer exactly as the art's recipe does, and returns the frames as RGBA. */
+ * unmodified, in assets/pixelbolt/). The page sends the hero crop, the extra emitters for a click and the live
+ * settings; the worker compiles that crop's fluid source with them, renders the layer exactly as the art's recipe
+ * does, and returns the frames as RGBA. */
 import { compileFluid } from '../pixelbolt/src/fluid.js';
 import { renderProject } from '../pixelbolt/src/core.js';
 
@@ -18,23 +19,32 @@ function load(name) {
   return files.get(name);
 }
 
-async function simulate({ layer, emitters, settings }) {
-  const hero = await load('hero.json');
+async function simulate({ variant, layer, emitters, settings }) {
+  const hero = await load(`${variant}/hero.json`);
   const spec = hero[layer];
-  const source = structuredClone(await load(spec.source));
+  const source = structuredClone(await load(`${variant}/${spec.source}`));
   const effect = source.effects[spec.effect];
+  const { frames = effect.frames, offset = 0, ...rest } = settings;
+  if (frames < effect.frames) {
+    // A shorter live loop keeps the art's steady emitters and the timed ones that start inside [offset, offset +
+    // frames), moved to the start of the shorter loop.
+    effect.emitters = effect.emitters
+      .filter(e => e.start === undefined || (e.start >= offset && e.start < offset + frames))
+      .map(e => e.start === undefined ? e : { ...e, start: e.start - offset, ...(e.end !== undefined && { end: Math.min(e.end - offset, frames) }) });
+    effect.frames = frames;
+  }
   effect.emitters.push(...emitters);
-  Object.assign(effect, settings);
+  Object.assign(effect, rest);
   const started = performance.now();
   const { recipe } = compileFluid(source);
-  // The steam layer carries the art's own recipe ops on top of the gas (the quiet band and the flask's mint light).
+  // The steam layer carries the art's own recipe ops on top of the gas (its fade and the flask's mint light).
   const extras = layer === 'steam' ? hero.render.steamExtras : [];
-  const frames = recipe.frames
+  const rendered = recipe.frames
     .filter(frame => frame.name.slice(0, frame.name.lastIndexOf('-')) === spec.effect)
     .map(frame => ({ name: frame.name, duration: frame.duration, ops: [...(frame.ops ?? []), ...extras] }));
   const project = renderProject({
     version: 1, name: layer, width: recipe.width, height: recipe.height, palette: hero.render.palette,
-    ramps: hero.render.ramps, frames, animations: { loop: { frames: frames.map(frame => frame.name) } }
+    ramps: hero.render.ramps, frames: rendered, animations: { loop: { frames: rendered.map(frame => frame.name) } }
   });
   const ms = performance.now() - started;
   const size = project.width * project.height * 4;
@@ -45,8 +55,8 @@ async function simulate({ layer, emitters, settings }) {
 
 self.addEventListener('message', async ({ data }) => {
   if (data.warm) {
-    // Fetch the sources ahead of the first click; the modules above are already loaded.
-    Promise.all(['hero.json', 'steam.fluid.json', 'flask.fluid.json'].map(load)).catch(() => {});
+    // Fetch the crop's sources ahead of the first click; the modules above are already loaded.
+    load(`${data.warm}/hero.json`).then(hero => Promise.all(['steam', 'liquid'].map(layer => load(`${data.warm}/${hero[layer].source}`)))).catch(() => {});
     return;
   }
   try {

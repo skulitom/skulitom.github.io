@@ -7,7 +7,7 @@
  */
 import { loadSpriteSheet, drawFrame, frameAt } from '../pixelbolt/src/runtime.js';
 
-const VERSION = 2;                    // bump with the art so caches never pair new data with old
+const VERSION = 3;                    // bump with the art so caches never pair new data with old
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const players = new Set();
 let motion = () => true;
@@ -42,8 +42,6 @@ const whenVisible = (element, callback, rootMargin = '0px') => {
   new IntersectionObserver(entries => callback(entries.at(-1).isIntersecting), { rootMargin }).observe(element);
 };
 const ratio = () => window.devicePixelRatio || 1;
-// The largest whole number of device pixels per art pixel that fits `room` CSS pixels.
-const fitScale = (room, size) => Math.max(1, Math.floor(room * ratio() / size + 1e-6));
 
 // One frame of any drawable layer, read back as RGBA through a scratch canvas.
 const [scratch, scratchContext] = makeCanvas(1, 1, true);
@@ -64,78 +62,93 @@ function dissolve(from, to, level) {
 
 /* ---------------------------------------------------------------- the hero */
 
-// The extra emitters a click adds. Steam: a hot billow rolling out sideways, then a smaller one; the flask: a stir
-// vortex in the liquid with a rush of bubbles. `start` is the loop frame the visitor's event begins on.
+// Two crops of the same workbench: "wide" (the desktop hero from the window to the monitor, 234 x 162) where its
+// column has room for 2x, "narrow" (the phone composition without its top wall, 156 x 130) elsewhere. The same query
+// picks the <picture> still in index.html and the stage's shape in styles.css.
+const WIDE = '(min-width: 1200px), (min-width: 540px) and (max-width: 820px)';
+
+// The extra emitters a click adds. `start` is the frame of the live loop the visitor's event begins on.
+// - heat (Add heat, or a click at the neck): the art's own biggest billow again, from the vent
+// - swirl (a click on the plume): a vortex at that point that rolls the steam into a curl, sized to the crop
+// - stir (Stir the flask, or a click on it): a vortex in the liquid with a rush of bubbles
 const EMITTERS = {
-  steam: (at, start) => [
-    { name: 'visitor', at, radius: 2.6, rate: 1, start, end: start + 3, density: 3.8, temperature: 0.9, falloff: 0.95,
-      velocity: [0.7, -0.9], expand: 3, noise: 0.12, flicker: 0.15, vortex: 0.9 },
-    { name: 'visitor-2', at: [at[0], at[1] + 1], radius: 2, rate: 1, start: start + 6, end: start + 8, density: 2.4,
-      temperature: 0.9, falloff: 0.95, velocity: [-0.4, -1.1], expand: 2.2, noise: 0.1, flicker: 0.15, vortex: -0.6 }
-  ],
-  liquid: (at, start, spin) => [
+  heat: (at, start, steam) => steam.billows.slice(0, 1).map(billow => ({ ...billow, name: 'visitor-heat', at,
+    start, end: start + ((billow.end ?? (billow.start ?? 0) + 3) - (billow.start ?? 0)) })),
+  swirl: (at, start, steam, spin) => [{ name: 'visitor-swirl', at, radius: Math.max(6, steam.billows[0].radius * 2.2),
+    rate: 1, density: 0, start, end: start + 10, vortex: 2.2 * spin, velocity: [0, -0.4] }],
+  stir: (at, start, liquid, spin) => [
     { name: 'stir', at, radius: 12, rate: 1, density: 0, start, end: start + 10, vortex: 2.2 * spin },
     { name: 'stir-bubbles', at: [at[0], at[1] + 2], area: [14, 4], rate: 1, density: 0, start: start + 1, end: start + 11,
       sparks: { count: 1.2, life: [14, 24], colors: ['n', 'm'], size: 1, angle: 270, speed: 0.8, gravity: [0, -0.1],
         drag: 0.05, follow: 0.5, pop: true } }
   ]
 };
-// A live compile skips most of the warm-up the published art used (its loop is already settled after one cycle),
-// and the steam uses fewer pressure iterations. Unchanged, both stay within 2-10% of a frame's fluid pixels of the
-// approved loop (the published sources at their own settings reproduce it exactly).
-const SETTINGS = { steam: { warmup: 1, iterations: 16 }, liquid: { warmup: 1 } };
-const LONGEST = { steam: 9, liquid: 12 };     // frames the visitor's emitters span (windows can't wrap the loop)
-const SHOW = { steam: 12, liquid: 19 };       // frames after the start that make the best still
-const STILL_STARTS = [6, 22, 38, 66];         // with motion off, each press shows a different moment
+// A live compile skips most of the warm-up the published art used (its loop is already settled after one cycle).
+// The steam also uses fewer pressure iterations and a 48-frame loop (the second half of the art's billows: the big
+// surge and two calmer ones, played twice per scene loop), so a click stays under a second even on the desktop
+// crop's larger canvas. With the published settings, the same sources reproduce the approved loops exactly.
+const SETTINGS = { steam: { warmup: 1, iterations: 12, frames: 48, offset: 48 }, liquid: { warmup: 1 } };
+const LONGEST = { steam: 10, liquid: 12 };    // frames the visitor's emitters span (windows can't wrap the loop)
+const SHOW = { heat: 12, swirl: 10, stir: 19 };   // frames after the start that make the best still
+const STILL_STARTS = { steam: [6, 18, 30], liquid: [6, 22, 38, 66] };   // motion off: a different moment each press
 const DISSOLVE = 4;
 
 async function mountHero(figure) {
   const stage = figure.querySelector('.hero-stage');
   const status = figure.querySelector('.hero-status');
   const buttons = { liquid: figure.querySelector('.stir-flask'), steam: figure.querySelector('.add-heat') };
-  const base = new URL('hero/', import.meta.url);
-  const file = name => versioned(new URL(name, base));
-  const response = await fetch(file('hero.json'));
-  if (!response.ok) throw new Error(`hero.json: HTTP ${response.status}`);
-  const hero = await response.json();
-  const { width: W, height: H, frames: COUNT, duration: MS } = hero;
-  const [art, artContext] = makeCanvas(W, H, true);
-  const touch = window.matchMedia('(hover: none)').matches;
-  const hint = `${touch ? 'Tap' : 'Click'} the flask or the steam to simulate it live in your browser.`;
-  let canvas = null, context = null, layers = null, loading = null, worker = null, pending = null;
-  let time = hero.still * MS, last = 0, visible = false, busy = false, request = 0, spin = 1, presses = 0;
+  const wide = window.matchMedia(WIDE);
+  const crops = new Map();
+  const crop = name => {
+    if (!crops.has(name)) {
+      crops.set(name, fetch(versioned(new URL(`hero/${name}/hero.json`, import.meta.url))).then(response => {
+        if (!response.ok) throw new Error(`hero.json: HTTP ${response.status}`);
+        return response.json();
+      }).catch(error => { crops.delete(name); throw error; }));
+    }
+    return crops.get(name);
+  };
+  let variant = wide.matches ? 'wide' : 'narrow';
+  let hero = await crop(variant);
+  let art = null, artContext = null, canvas = null, context = null, layers = null, loading = null;
+  let worker = null, pending = null, fade = null;
+  let time = hero.still * hero.duration, last = 0, visible = false, busy = false, request = 0, spin = 1, presses = 0;
   // How long a re-simulation takes here, so the visitor's event can start just after the result arrives.
   const estimate = { steam: 1100, liquid: 550 };
-  // A dissolve into a new loop: from the old layer (still animating) or, after a jump, a frozen frame.
-  let fade = null;
-
-  status.textContent = hint;
+  const touch = window.matchMedia('(hover: none)').matches;
+  status.textContent = `${touch ? 'Tap' : 'Click'} the flask or the steam to simulate it live in your browser.`;
   status.setAttribute('role', 'status');
 
+  const file = name => versioned(new URL(`hero/${variant}/${name}`, import.meta.url));
+  // Layers loop on their own length: the live steam is 48 frames inside the 96-frame scene.
   const sheetLayer = sheet => {
     const names = sheet.atlas.animations.loop.frames;
-    return (target, i, x, y) => drawFrame(target, sheet, names[i], x, y, { anchor: false });
+    return (target, i, x, y) => drawFrame(target, sheet, names[i % names.length], x, y, { anchor: false });
   };
   const stripLayer = ({ width, height, count, pixels }) => {
     const [strip, stripContext] = makeCanvas(width, height * count);
     stripContext.putImageData(new ImageData(pixels, width, height * count), 0, 0);
-    return (target, i, x, y) => target.drawImage(strip, 0, i * height, width, height, x, y, width, height);
+    return (target, i, x, y) => target.drawImage(strip, 0, (i % count) * height, width, height, x, y, width, height);
   };
-  // The front layer is one still plus the small box that moves, drawn over it.
-  const frontLayer = (still, moving, box) => (target, i, x, y) => {
+  // A mostly still group is one still plus the small box that moves, drawn over it.
+  const splitLayer = (still, moving, box) => (target, i, x, y) => {
     target.drawImage(still, x, y);
     target.drawImage(moving, 0, i * box.height, box.width, box.height, x + box.x, y + box.y, box.width, box.height);
   };
 
   function load() {
+    const forVariant = variant;
     loading ??= (async () => {
-      const [bg, steam, liquid, still, moving] = await Promise.all([
-        loadImage(file('bg.png')),
-        loadSpriteSheet(file('steam.atlas.json')), loadSpriteSheet(file('liquid.atlas.json')),
-        loadImage(file('top-still.png')), loadImage(file('top-moving.png'))
-      ]);
-      layers = { bg, steam: sheetLayer(steam), liquid: sheetLayer(liquid), top: frontLayer(still, moving, hero.layers.top.moving) };
-      [canvas, context] = makeCanvas(W, H);
+      const entries = await Promise.all(hero.order.map(async name => {
+        const spec = hero.layers[name];
+        if (spec.moving) return [name, splitLayer(await loadImage(file(`${name}-still.png`)), await loadImage(file(`${name}-moving.png`)), spec.moving)];
+        return [name, sheetLayer(await loadSpriteSheet(file(`${name}.atlas.json`)))];
+      }));
+      const bg = await loadImage(file('bg.png'));
+      if (forVariant !== variant) throw new Error('the crop changed while loading');
+      layers = { bg, ...Object.fromEntries(entries) };
+      [art, artContext] = makeCanvas(hero.width, hero.height, true);
+      [canvas, context] = makeCanvas(hero.width, hero.height);
       canvas.setAttribute('aria-hidden', 'true');
       stage.append(canvas);
       fit();
@@ -144,23 +157,39 @@ async function mountHero(figure) {
     return loading;
   }
 
+  // A resize across the breakpoint swaps the crop: everything reloads for the other composition.
+  wide.addEventListener('change', async () => {
+    const next = wide.matches ? 'wide' : 'narrow';
+    if (next === variant) return;
+    let data;
+    try { data = await crop(next); } catch { return; }
+    variant = next; hero = data;
+    canvas?.remove();
+    canvas = context = art = artContext = layers = loading = pending = fade = null;
+    stage.classList.remove('is-ready');
+    time = hero.still * hero.duration; last = 0;
+    setBusy(false);
+    worker?.postMessage({ warm: variant });
+    player.sync();
+  });
+
   function fit() {
     if (!canvas) return;
     // CSS sizes the stage in whole device pixels per art pixel; the canvas matches it one to one.
-    const scale = Math.max(1, Math.round(stage.getBoundingClientRect().width * ratio() / W));
-    if (canvas.width !== W * scale) { canvas.width = W * scale; canvas.height = H * scale; }
+    const scale = Math.max(1, Math.round(stage.getBoundingClientRect().width * ratio() / hero.width));
+    if (canvas.width !== hero.width * scale) { canvas.width = hero.width * scale; canvas.height = hero.height * scale; }
     paint();
   }
 
-  const frame = () => Math.floor(time / MS) % COUNT;
+  const frame = () => Math.floor(time / hero.duration) % hero.frames;
   function compose(target, i, replace = {}) {
-    target.clearRect(0, 0, W, H);
+    target.clearRect(0, 0, hero.width, hero.height);
     target.drawImage(layers.bg, 0, 0);
-    for (const name of ['steam', 'liquid', 'top']) (replace[name] ?? layers[name])(target, i, hero.layers[name].x, hero.layers[name].y);
+    for (const name of hero.order) (replace[name] ?? layers[name])(target, i, hero.layers[name].x, hero.layers[name].y);
   }
   function paint() {
     if (!canvas || !layers) return;
-    const i = frame();
+    const i = frame(), { width: W, height: H } = hero;
     compose(artContext, i);
     if (fade && fade.step >= DISSOLVE) fade = null;
     if (fade) {
@@ -176,7 +205,7 @@ async function mountHero(figure) {
     running: () => Boolean(layers) && motion() && visible && !document.hidden,
     advance(now) {
       const before = frame();
-      if (last) time = (time + Math.min(now - last, 250)) % (COUNT * MS);
+      if (last) time = (time + Math.min(now - last, 250)) % (hero.frames * hero.duration);
       last = now;
       if (frame() === before) return;
       if (fade) fade.step += 1;
@@ -198,7 +227,7 @@ async function mountHero(figure) {
   else window.addEventListener('resize', fit, { passive: true });
 
   // Without the sheets the still stays; without the worker the loop keeps playing and only the caption changes.
-  function failLoad() { stage.classList.remove('is-ready'); }
+  function failLoad() { if (!layers) stage.classList.remove('is-ready'); }
   function failSimulation(message = 'The live simulation is not available in this browser.') {
     setBusy(false);
     status.textContent = message;
@@ -211,7 +240,7 @@ async function mountHero(figure) {
     try {
       const fresh = new Worker(versioned(new URL('fluid-worker.js', import.meta.url)), { type: 'module' });
       fresh.addEventListener('message', ({ data }) => {
-        if (data.ready) fresh.postMessage({ warm: true });
+        if (data.ready) fresh.postMessage({ warm: variant });
         else if (pending && data.id === request) {
           fresh.terminate();
           if (worker === fresh) { worker = null; startWorker(); }
@@ -236,49 +265,55 @@ async function mountHero(figure) {
     for (const button of Object.values(buttons)) button.setAttribute('aria-disabled', String(value));
   }
 
-  // Where a visitor's event starts: just after the result can arrive while playing; with motion off, a different
-  // moment each press.
+  // Where a visitor's event starts in its live loop: just after the result can arrive while playing; with motion
+  // off, a different moment each press.
+  const period = layer => SETTINGS[layer].frames ?? hero.frames;
   function startFrame(layer) {
-    let start = motion() ? (frame() + Math.ceil(estimate[layer] / MS) + 3) % COUNT : STILL_STARTS[presses % STILL_STARTS.length];
-    if (start > COUNT - LONGEST[layer]) start = 0;
+    const starts = STILL_STARTS[layer];
+    let start = motion() ? (frame() + Math.ceil(estimate[layer] / hero.duration) + 3) % period(layer) : starts[presses % starts.length];
+    if (start > period(layer) - LONGEST[layer]) start = 0;
     return start;
   }
 
-  function simulate(layer, at) {
+  function simulate(layer, at, kind = layer === 'steam' ? 'heat' : 'stir') {
     if (busy) return;
     if (!startWorker()) { failSimulation(); return; }
     setBusy(true);
     status.textContent = 'Simulating in your browser…';
     const start = startFrame(layer);
     presses += 1;
-    if (layer === 'liquid') spin = at ? (at[0] < hero.liquid.bulb.at[0] ? -1 : 1) : -spin;
+    // A vortex turns away from the middle of what was clicked; a button alternates.
+    const middle = layer === 'steam' ? hero.steam.vent[0] : hero.liquid.bulb.at[0];
+    spin = at ? (at[0] < middle ? -1 : 1) : -spin;
     const point = at ?? (layer === 'steam' ? hero.steam.vent : [hero.liquid.bulb.at[0], hero.liquid.bulb.at[1] + 11]);
     request += 1;
-    pending = { layer, start };
-    worker.postMessage({ id: request, layer, emitters: EMITTERS[layer](point, start, spin), settings: SETTINGS[layer] });
+    pending = { layer, kind, start, variant };
+    worker.postMessage({ id: request, variant, layer, emitters: EMITTERS[kind](point, start, hero[layer], spin), settings: SETTINGS[layer] });
     load().catch(() => {});
   }
 
   async function finish(result) {
-    const { layer, start } = pending;
+    const { layer, kind, start, variant: asked } = pending;
     pending = null;
+    if (asked !== variant) return;
     if (result.error) { failSimulation(); return; }
     // The next event is timed from the simulation itself plus a little messaging, not from a cold first start.
     estimate[layer] = result.ms * 1.15 + 150;
     try { await load(); } catch { failLoad(); failSimulation('The new simulation could not be shown; the still stays.'); return; }
+    if (asked !== variant) return;
     const old = { [layer]: layers[layer] };
     layers[layer] = stripLayer(result);
     if (motion()) {
-      // The event should begin just after the dissolve. If the result came late, step back to just before it and
-      // dissolve from the frame on screen; otherwise dissolve from the old loop as it keeps playing.
-      const behind = (frame() - start + COUNT) % COUNT;
-      if (behind > 0 && behind < COUNT / 2) {
-        fade = { frozen: artContext.getImageData(0, 0, W, H), step: 0 };
-        time = ((start - 2 + COUNT) % COUNT) * MS;
+      // The event should begin just after the dissolve. If the result came late, step back to just before its latest
+      // start and dissolve from the frame on screen; otherwise dissolve from the old loop as it keeps playing.
+      const behind = ((frame() - start) % period(layer) + period(layer)) % period(layer);
+      if (behind > 0 && behind < period(layer) / 2) {
+        fade = { frozen: artContext.getImageData(0, 0, hero.width, hero.height), step: 0 };
+        time = ((frame() - behind - 2 + hero.frames) % hero.frames) * hero.duration;
       } else fade = { old, step: 0 };
     } else {
       fade = null;
-      time = ((start + SHOW[layer]) % COUNT) * MS;
+      time = ((start + SHOW[kind]) % hero.frames) * hero.duration;
     }
     paint();
     setBusy(false);
@@ -291,24 +326,23 @@ async function mountHero(figure) {
   // The flask's bulb and the air above its neck are the two places a click means something.
   function hit(event) {
     const bounds = stage.getBoundingClientRect();
-    const x = (event.clientX - bounds.left) / bounds.width * W, y = (event.clientY - bounds.top) / bounds.height * H;
+    const x = (event.clientX - bounds.left) / bounds.width * hero.width, y = (event.clientY - bounds.top) / bounds.height * hero.height;
     const liquid = hero.layers.liquid, bulb = hero.liquid.bulb;
     const bx = liquid.x + bulb.at[0], by = liquid.y + bulb.at[1];
     if (Math.hypot(x - bx, y - by) <= bulb.radius + 3) {
       // Stir inside the liquid: below its surface and inside the glass.
-      return { layer: 'liquid', at: [Math.round(Math.min(Math.max(x - liquid.x, 10), 34)), Math.round(Math.min(Math.max(y - liquid.y, 35), 42))] };
+      return { layer: 'liquid', kind: 'stir', at: [Math.round(Math.min(Math.max(x - liquid.x, 10), 34)), Math.round(Math.min(Math.max(y - liquid.y, 38), 42))] };
     }
-    const steam = hero.layers.steam, vent = hero.steam.vent;
+    const steam = hero.layers.steam, { vent, plume } = hero.steam;
     const sx = x - steam.x, sy = y - steam.y;
-    if (sx >= 0 && sx < steam.width && sy >= 10 && sy <= vent[1] + 2) {
-      const near = Math.hypot(sx - vent[0], sy - vent[1]) < 7;
-      return { layer: 'steam', at: near ? vent : [Math.round(Math.min(Math.max(sx, 8), steam.width - 14)), Math.round(Math.min(Math.max(sy, 18), vent[1]))] };
-    }
-    return null;
+    if (sx < 0 || sx >= steam.width || sy < 0 || sy > vent[1] + 2) return null;
+    if (Math.hypot(sx - vent[0], sy - vent[1]) < 8) return { layer: 'steam', kind: 'heat', at: vent };
+    const inset = 4;
+    return { layer: 'steam', kind: 'swirl', at: [Math.round(Math.min(Math.max(sx, plume[0] + inset), plume[2] - inset)), Math.round(Math.min(Math.max(sy, plume[1] + inset), plume[3] - inset))] };
   }
   stage.addEventListener('click', event => {
     const target = hit(event);
-    if (target) simulate(target.layer, target.at);
+    if (target) simulate(target.layer, target.at, target.kind);
   });
   stage.addEventListener('pointermove', event => {
     if (event.pointerType === 'mouse') stage.classList.toggle('is-target', Boolean(hit(event)));
@@ -361,16 +395,11 @@ function mountCard(link) {
     }).catch(() => { loading = null; link.classList.remove('is-ready'); });
     return loading;
   }
-  // The same whole-device-pixel scale the CSS gives the still, so the canvas takes over at the same size.
+  // CSS sizes the frame to the art in whole device pixels per art pixel; the canvas matches it one to one.
   function fit() {
     if (!canvas) return;
-    const style = getComputedStyle(link), pad = parseFloat(style.getPropertyValue('--pixel-pad')) || 0;
-    const border = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
-    const bounds = link.getBoundingClientRect();
-    const scale = Math.min(fitScale(bounds.width - border - pad * 2, art.width), fitScale(link.clientHeight - pad * 2, art.height));
+    const scale = Math.max(1, Math.round(link.getBoundingClientRect().width * ratio() / art.width));
     if (canvas.width !== art.width * scale) { canvas.width = art.width * scale; canvas.height = art.height * scale; }
-    canvas.style.width = `${art.width * scale / ratio()}px`;
-    canvas.style.height = `${art.height * scale / ratio()}px`;
     paint(true);
   }
   const current = () => mode === 'burst'
@@ -439,13 +468,82 @@ function mountCard(link) {
   return player;
 }
 
-/** Mounts the hero and the cards. `isMotionEnabled` reports the visitor's motion setting; call sync() when it changes. */
+/* ---------------------------------------------------------------- footer */
+
+// The strip under the same bench: a still background and one small looping sheet, at about 2x on whole device
+// pixels. Where the page is narrower than the strip, it keeps its right end (the dish and the drip).
+function mountFooter(box) {
+  const base = new URL('footer/', import.meta.url);
+  let data = null, bg = null, sheet = null, canvas = null, context = null, art = null, artContext = null, loading = null;
+  let visible = false, near = false, last = 0, time = 0, shown = null;
+  function load() {
+    loading ??= (async () => {
+      const response = await fetch(versioned(new URL('footer.json', base)));
+      if (!response.ok) throw new Error(`footer.json: HTTP ${response.status}`);
+      data = await response.json();
+      [bg, sheet] = await Promise.all([loadImage(versioned(new URL('bg.png', base))), loadSpriteSheet(versioned(new URL(data.sheet, base)))]);
+      // Start on the still's frame, so the swap to the canvas is invisible.
+      time = sheet.atlas.animations[data.animation].frames.slice(0, data.still).reduce((sum, name) => sum + sheet.atlas.frames[name].duration, 0);
+      [art, artContext] = makeCanvas(data.width, data.height);
+      [canvas, context] = makeCanvas(data.width, data.height);
+      box.append(canvas);
+      fit();
+      box.classList.add('is-ready');
+      player.sync();
+    })().catch(() => { loading = null; box.classList.remove('is-ready'); });
+    return loading;
+  }
+  function fit() {
+    if (!canvas) return;
+    const bounds = box.getBoundingClientRect(), scale = Math.max(1, Math.round(bounds.height * ratio() / data.height));
+    const columns = Math.min(data.width, Math.ceil(bounds.width * ratio() / scale - 1e-6));
+    if (canvas.width !== columns * scale || canvas.height !== data.height * scale) { canvas.width = columns * scale; canvas.height = data.height * scale; }
+    canvas.style.width = `${columns * scale / ratio()}px`;
+    paint(true);
+  }
+  function paint(force = false) {
+    if (!canvas) return;
+    const name = frameAt(sheet.atlas, data.animation, time);
+    if (!force && name === shown) return;
+    shown = name;
+    artContext.clearRect(0, 0, data.width, data.height);
+    artContext.drawImage(bg, 0, 0);
+    drawFrame(artContext, sheet, name, data.x, data.y, { anchor: false });
+    const columns = canvas.width * data.height / canvas.height;
+    context.imageSmoothingEnabled = false;
+    context.drawImage(art, data.width - columns, 0, columns, data.height, 0, 0, canvas.width, canvas.height);
+  }
+  const player = {
+    running: () => Boolean(canvas) && motion() && visible && !document.hidden,
+    advance(now) {
+      time += last ? Math.min(now - last, 250) : 0;
+      last = now;
+      paint();
+    },
+    sync() {
+      if (!player.running()) last = 0;
+      if (motion() && near && !loading) load();
+      schedule();
+    },
+    fit
+  };
+  players.add(player);
+  whenVisible(box, isNear => { near = isNear; player.sync(); }, '200px 0px');
+  whenVisible(box, isVisible => { visible = isVisible; player.sync(); });
+  document.addEventListener('visibilitychange', player.sync);
+  if ('ResizeObserver' in window) new ResizeObserver(fit).observe(box);
+  return player;
+}
+
+/** Mounts the hero, the cards and the footer. `isMotionEnabled` reports the visitor's motion setting; call sync() when it changes. */
 export function startPixelArt({ isMotionEnabled }) {
   motion = isMotionEnabled;
   const mounted = [];
   const figure = document.querySelector('.pixel-hero');
   if (figure) mountHero(figure).then(player => mounted.push(player), () => {});
   for (const link of document.querySelectorAll('[data-pixel-loop]')) mounted.push(mountCard(link));
+  const footer = document.querySelector('.footer-art');
+  if (footer) mounted.push(mountFooter(footer));
   // A new device-pixel ratio (zoom, or a move to another screen) changes every whole-pixel scale.
   window.addEventListener('dprchange', () => { for (const player of mounted) player.fit(); });
   return { sync: () => { for (const player of mounted) player.sync(); schedule(); } };
