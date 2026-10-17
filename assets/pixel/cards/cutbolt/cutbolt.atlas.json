@@ -1,0 +1,1628 @@
+{
+  "frames": {
+    "base": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-0": {
+      "frame": {
+        "x": 192,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-1": {
+      "frame": {
+        "x": 384,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-2": {
+      "frame": {
+        "x": 576,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-3": {
+      "frame": {
+        "x": 768,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-4": {
+      "frame": {
+        "x": 960,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-5": {
+      "frame": {
+        "x": 1152,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-6": {
+      "frame": {
+        "x": 1344,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-7": {
+      "frame": {
+        "x": 0,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-8": {
+      "frame": {
+        "x": 192,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-9": {
+      "frame": {
+        "x": 384,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-10": {
+      "frame": {
+        "x": 576,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-11": {
+      "frame": {
+        "x": 768,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-12": {
+      "frame": {
+        "x": 960,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-13": {
+      "frame": {
+        "x": 1152,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-14": {
+      "frame": {
+        "x": 1344,
+        "y": 100,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-15": {
+      "frame": {
+        "x": 0,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-16": {
+      "frame": {
+        "x": 192,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-17": {
+      "frame": {
+        "x": 384,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-18": {
+      "frame": {
+        "x": 576,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-19": {
+      "frame": {
+        "x": 768,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-20": {
+      "frame": {
+        "x": 960,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-21": {
+      "frame": {
+        "x": 1152,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-22": {
+      "frame": {
+        "x": 1344,
+        "y": 200,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-23": {
+      "frame": {
+        "x": 0,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-24": {
+      "frame": {
+        "x": 192,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-25": {
+      "frame": {
+        "x": 384,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-26": {
+      "frame": {
+        "x": 576,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-27": {
+      "frame": {
+        "x": 768,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-28": {
+      "frame": {
+        "x": 960,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-29": {
+      "frame": {
+        "x": 1152,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-30": {
+      "frame": {
+        "x": 1344,
+        "y": 300,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-31": {
+      "frame": {
+        "x": 0,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-32": {
+      "frame": {
+        "x": 192,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-33": {
+      "frame": {
+        "x": 384,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-34": {
+      "frame": {
+        "x": 576,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-35": {
+      "frame": {
+        "x": 768,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-36": {
+      "frame": {
+        "x": 960,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-37": {
+      "frame": {
+        "x": 1152,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-38": {
+      "frame": {
+        "x": 1344,
+        "y": 400,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-39": {
+      "frame": {
+        "x": 0,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-40": {
+      "frame": {
+        "x": 192,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-41": {
+      "frame": {
+        "x": 384,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-42": {
+      "frame": {
+        "x": 576,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-43": {
+      "frame": {
+        "x": 768,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-44": {
+      "frame": {
+        "x": 960,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-45": {
+      "frame": {
+        "x": 1152,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-46": {
+      "frame": {
+        "x": 1344,
+        "y": 500,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-47": {
+      "frame": {
+        "x": 0,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-48": {
+      "frame": {
+        "x": 192,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-49": {
+      "frame": {
+        "x": 384,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-50": {
+      "frame": {
+        "x": 576,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-51": {
+      "frame": {
+        "x": 768,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-52": {
+      "frame": {
+        "x": 960,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-53": {
+      "frame": {
+        "x": 1152,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-54": {
+      "frame": {
+        "x": 1344,
+        "y": 600,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-55": {
+      "frame": {
+        "x": 0,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-56": {
+      "frame": {
+        "x": 192,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-57": {
+      "frame": {
+        "x": 384,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-58": {
+      "frame": {
+        "x": 576,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-59": {
+      "frame": {
+        "x": 768,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-60": {
+      "frame": {
+        "x": 960,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-61": {
+      "frame": {
+        "x": 1152,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-62": {
+      "frame": {
+        "x": 1344,
+        "y": 700,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-63": {
+      "frame": {
+        "x": 0,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-64": {
+      "frame": {
+        "x": 192,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-65": {
+      "frame": {
+        "x": 384,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-66": {
+      "frame": {
+        "x": 576,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-67": {
+      "frame": {
+        "x": 768,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-68": {
+      "frame": {
+        "x": 960,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-69": {
+      "frame": {
+        "x": 1152,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-70": {
+      "frame": {
+        "x": 1344,
+        "y": 800,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    },
+    "cutbolt-71": {
+      "frame": {
+        "x": 0,
+        "y": 900,
+        "w": 192,
+        "h": 100
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 100
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 100
+      },
+      "duration": 70
+    }
+  },
+  "animations": {
+    "cutbolt": {
+      "frames": [
+        "cutbolt-0",
+        "cutbolt-1",
+        "cutbolt-2",
+        "cutbolt-3",
+        "cutbolt-4",
+        "cutbolt-5",
+        "cutbolt-6",
+        "cutbolt-7",
+        "cutbolt-8",
+        "cutbolt-9",
+        "cutbolt-10",
+        "cutbolt-11",
+        "cutbolt-12",
+        "cutbolt-13",
+        "cutbolt-14",
+        "cutbolt-15",
+        "cutbolt-16",
+        "cutbolt-17",
+        "cutbolt-18",
+        "cutbolt-19",
+        "cutbolt-20",
+        "cutbolt-21",
+        "cutbolt-22",
+        "cutbolt-23",
+        "cutbolt-24",
+        "cutbolt-25",
+        "cutbolt-26",
+        "cutbolt-27",
+        "cutbolt-28",
+        "cutbolt-29",
+        "cutbolt-30",
+        "cutbolt-31",
+        "cutbolt-32",
+        "cutbolt-33",
+        "cutbolt-34",
+        "cutbolt-35",
+        "cutbolt-36",
+        "cutbolt-37",
+        "cutbolt-38",
+        "cutbolt-39",
+        "cutbolt-40",
+        "cutbolt-41",
+        "cutbolt-42",
+        "cutbolt-43",
+        "cutbolt-44",
+        "cutbolt-45",
+        "cutbolt-46",
+        "cutbolt-47",
+        "cutbolt-48",
+        "cutbolt-49",
+        "cutbolt-50",
+        "cutbolt-51",
+        "cutbolt-52",
+        "cutbolt-53",
+        "cutbolt-54",
+        "cutbolt-55",
+        "cutbolt-56",
+        "cutbolt-57",
+        "cutbolt-58",
+        "cutbolt-59",
+        "cutbolt-60",
+        "cutbolt-61",
+        "cutbolt-62",
+        "cutbolt-63",
+        "cutbolt-64",
+        "cutbolt-65",
+        "cutbolt-66",
+        "cutbolt-67",
+        "cutbolt-68",
+        "cutbolt-69",
+        "cutbolt-70",
+        "cutbolt-71"
+      ],
+      "loop": true,
+      "duration": 5040
+    }
+  },
+  "meta": {
+    "app": "Pixelbolt",
+    "version": "1",
+    "image": "cutbolt.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1536,
+      "h": 1000
+    },
+    "scale": "1"
+  }
+}

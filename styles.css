@@ -83,18 +83,23 @@ h1 > span:last-child { font-size: .87em; }
 .text-link > span { transition: transform .3s var(--ease); }
 .text-link:hover { color: var(--mint); }
 .text-link:hover > span { transform: translate(3px, -3px); }
-.systems-study { position: relative; display: flex; flex-direction: column; justify-content: center; width: 100%; max-width: 520px; justify-self: end; min-width: 0; }
-.systems-study::before { content: ''; position: absolute; inset: 15% -3% 10%; background: radial-gradient(ellipse, #7365f016, transparent 65%); pointer-events: none; }
-.study-stage { position: relative; width: 100%; aspect-ratio: 1; touch-action: pan-y; }
-.study-stage.is-ready { cursor: crosshair; }
-.study-stage canvas, .study-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
-.study-stage canvas { opacity: 0; transition: opacity .4s; }
-.study-stage.is-ready canvas { opacity: 1; }
-.study-stage.is-ready .study-fallback { opacity: 0; }
 .study-controls { display: flex; justify-content: center; flex-wrap: wrap; align-items: center; gap: 0 20px; }
-.seed-life, .reset-life, .motion-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 4px; border: 0; background: transparent; font-size: .875rem; color: var(--muted); }
-.seed-life > span, .reset-life > span { font-size: 20px; }
-.seed-life:hover, .reset-life:hover, .motion-toggle:hover { color: var(--mint); }
+.stir-flask, .add-heat, .motion-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 4px; border: 0; background: transparent; font-size: .875rem; color: var(--muted); }
+.stir-flask:hover, .add-heat:hover, .motion-toggle:hover { color: var(--mint); }
+.stir-flask[aria-disabled='true'], .add-heat[aria-disabled='true'] { color: #6b7182; cursor: progress; }
+
+/* The live Pixelbolt hero: the phone composition (156 x 180 art pixels) at 3x, or 2x on narrower layouts, drawn
+   nearest-neighbour. The still is the same frame the animation starts on. */
+.pixel-hero { --hero-width: 468px; position: relative; display: flex; flex-direction: column; align-items: center; justify-self: end; min-width: 0; margin: 0; }
+.hero-stage { position: relative; width: var(--hero-width); max-width: 100%; aspect-ratio: 156 / 180; overflow: hidden; border-radius: 5.128% / 4.444%; background: #171426; box-shadow: 0 0 0 1px #2c2a40; }
+.hero-stage > img, .hero-stage > canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
+.hero-stage > canvas { opacity: 0; }
+.hero-stage.is-ready > canvas { opacity: 1; }
+.hero-stage.is-ready > img { opacity: 0; }
+.hero-stage.is-target { cursor: pointer; }
+.hero-stage[aria-busy='true'] { cursor: progress; }
+.hero-caption { max-width: var(--hero-width); margin-top: 2px; color: var(--muted); font: .75rem/1.6 var(--mono); letter-spacing: .02em; text-align: center; }
+.hero-caption a { color: var(--mint); text-decoration: underline; text-underline-offset: 3px; }
 
 /* Recorded work leads; supporting projects share columns and baselines. */
 .section { padding-block: 88px; }
@@ -224,6 +229,10 @@ body[data-motion='off'] .project-image > img, body[data-motion='off'] .app-scree
 body[data-motion='off'] { scroll-behavior: auto; }
 html:has(body[data-motion='off']) { scroll-behavior: auto; }
 
+@media (max-width: 1199px) {
+  .pixel-hero { --hero-width: 312px; }
+  .hero-caption { min-height: 3.2em; }
+}
 @media (max-width: 1100px) {
   .wrap { width: calc(100% - 64px); }
   .hero { column-gap: 12px; padding-top: 58px; }
@@ -248,7 +257,7 @@ html:has(body[data-motion='off']) { scroll-behavior: auto; }
   .hero-copy { max-width: 660px; }
   .hero-description { max-width: 550px; }
   .hero-specialisms { font-size: 1.35rem; }
-  .systems-study { width: min(100%, 320px); margin: 20px auto 0; justify-self: center; }
+  .pixel-hero { --hero-width: 312px; width: 100%; margin: 28px auto 0; justify-self: center; }
   .featured-project { grid-template-columns: 1fr; gap: 28px; }
   .project-grid { grid-template-columns: 1fr; }
   .featured-project .project-image { aspect-ratio: 1.8; }
@@ -261,7 +270,6 @@ html:has(body[data-motion='off']) { scroll-behavior: auto; }
   .project-row h4 a { min-height: 0; padding-block: 8px; }
   .project-row .project-category, .project-row h4 { min-height: 0; }
   .project-row .tags { padding-top: 16px; }
-  .study-stage { margin-block: 0; }
   .section { padding-block: 76px; }
   .section-heading { gap: 30px; margin-bottom: 38px; }
   h2 { font-size: clamp(2.8rem, 6.4vw, 3.5rem); }
@@ -301,7 +309,7 @@ html:has(body[data-motion='off']) { scroll-behavior: auto; }
   .hero-actions { gap: 13px 22px; margin-top: 25px; }
   .button { min-height: 52px; gap: 22px; padding-left: 18px; }
   .text-link { font-size: .875rem; }
-  .systems-study { width: min(100%, 270px); margin-top: 18px; }
+  .pixel-hero { margin-top: 22px; }
   .project-grid { gap: 28px; }
   .project-card { --card-padding: 20px; }
   .featured-project { padding-bottom: 32px; margin-bottom: 32px; }
@@ -449,6 +457,24 @@ html:has(body[data-motion='off']) { scroll-behavior: auto; }
   .run-example { padding: 22px; margin-block: 28px 44px; }
   .chapter-prose { font-size: 1.125rem; line-height: 1.85; }
 }
+
+/* Pixelbolt tool cards: each piece (192 x 100 art pixels) sits centred on a dark mat at a whole-number scale. */
+.project-image.pixel-art { --pixel-pad: 8px; display: grid; place-items: center; background: radial-gradient(ellipse at 50% 45%, #1c1a2e, #0d1018 75%); }
+.project-card > .project-image.pixel-art, .featured-project .project-image.pixel-art { aspect-ratio: 1.75; }
+/* An explicit width, not stretch plus margins: WebKit sizes a stretched flex item's aspect ratio before its margins. */
+.project-card > .project-image.pixel-art { align-self: center; width: calc(100% - var(--card-padding) * 2); margin-inline: 0; }
+.project-image.pixel-art > img, .project-image.pixel-art > canvas { width: min(100%, 192px); height: auto; aspect-ratio: 192 / 100; border-radius: 4.1667% / 8%; image-rendering: pixelated; transform: none !important; transition: none; }
+/* Without the canvas (no JS, reduced motion) the still steps in whole device pixels: 1/2 and 1/3 CSS steps on dense screens. */
+@supports (width: round(down, 100px, 7px)) {
+  .project-image.pixel-art > img { width: max(192px, round(down, 100% - var(--pixel-pad) * 2, 192px)); }
+  @media (min-resolution: 2dppx) { .project-image.pixel-art > img { width: max(192px, round(down, 100% - var(--pixel-pad) * 2, 96px)); } }
+  @media (min-resolution: 3dppx) { .project-image.pixel-art > img { width: max(192px, round(down, 100% - var(--pixel-pad) * 2, 64px)); } }
+}
+.project-image.pixel-art > canvas { position: absolute; inset: 0; margin: auto; }
+.project-image.pixel-art.is-ready > img { opacity: 0; }
+.project-image.pixel-art::after { display: none; }
+.pixel-credit { margin-top: 10px; max-width: 75ch; color: var(--muted); font-size: .875rem; }
+.pixel-credit a { color: var(--mint); text-decoration: underline; text-underline-offset: 4px; }
 
 /* Agent tools share the existing project palette and frames. */
 .tool-family-note { margin-top: 28px; max-width: 75ch; color: var(--muted); }

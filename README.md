@@ -8,16 +8,31 @@ This repository publishes the website. The GitHub profile README lives separatel
 
 - `index.html`: biography, projects, apps, navigation, and metadata.
 - `styles.css`: responsive dark theme and short, reduced-motion-aware animations.
-- `script.js`: section navigation, reading progress, motion controls, and the artificial-life canvas.
-- `life.js`: a small Gray–Scott reaction–diffusion model adapted from Primordia.
+- `script.js`: section navigation, reading progress, motion controls, and loading the pixel art.
+- `assets/pixel/art.js`: plays the Pixelbolt hero and tool-card art and runs the live hero simulation.
+- `assets/pixel/fluid-worker.js`: re-simulates a hero fluid off the main thread with Pixelbolt's own modules.
+- `assets/pixel/`: the art itself (sheets, atlases, stills and the hero's fluid sources); `assets/pixelbolt/`: the vendored Pixelbolt modules.
 - `assets/`: locally hosted project images, app images, toolkit badges, and fonts.
 - `ASSETS.md`: image sources and third-party asset licences.
+- `life.js`: the earlier reaction–diffusion hero. The page no longer loads it; it stays for cached pages and because the publishing workflow copies it.
 
-The site uses HTML, CSS, and dependency-free browser JavaScript. No build step is needed. All content and links work without JavaScript; the artificial-life study has a matching WebP fallback. Its initial state is pre-grown so loading never needs a simulation warm-up. The simulation uses a fixed 160 × 160 grid and adapts its work to slower devices. The canvas paints at a maximum of 30 fps, pauses outside the viewport and in background tabs, and stays stationary for reduced-motion preferences. Click or drag to seed growth, or use the keyboard-accessible Seed life button. Reset replaces a settled field with fresh colonies in a new orientation, then grows them from the beginning. Seeding and resetting with reduced motion change only the still frame. Touch scrolling remains native. The site's reveal and hover effects also respect reduced-motion preferences.
+The site uses HTML, CSS, and dependency-free browser JavaScript. No build step is needed. All content and links work without JavaScript: the hero and each tool card start as a static PNG still of the same art.
+
+### The Pixelbolt art
+
+Every pixel-art illustration on the page is made with [Pixelbolt](https://github.com/skulitom/Pixelbolt). The art is drawn nearest-neighbour at whole-number scales: the hero (156 × 180 art pixels) at 3× on wide layouts and 2× on narrow ones, and the 192 × 100 tool cards at the largest whole device-pixel scale that fits their frame. Animation paints at most 30 fps, pauses outside the viewport and in background tabs, and stays on the still for reduced-motion preferences or after Pause motion.
+
+The hero is a night workbench where a mint liquid boils in a flask and its steam rolls up in shaded billows. It plays a pre-rendered 96-frame loop (a still background plus three layers: steam, the flask's liquid, and everything in front). Clicking or tapping the flask, or the Stir the flask button, re-runs the flask's FLIP liquid source with a stir vortex at that point; clicking the steam, or Add heat, re-runs the steam's gas source with a hot billow. The worker uses Pixelbolt's compiler (`fluid.js`) and renderer (`core.js`), unmodified, then the new loop dissolves in through a Bayer mask so every pixel stays a palette colour. The caption reports the measured simulation time. Live runs use one warm-up cycle instead of the art's three, and 16 pressure iterations for the steam instead of 30, so a click costs about a second; with the published settings the same sources reproduce the approved loop exactly. With motion off, the buttons show a new still. The worker and Pixelbolt's modules load only on interaction or when the page is idle.
+
+Hovering, focusing or tapping a tool card plays that piece's hover burst once, then returns to its loop.
+
+### Refreshing the art
+
+The pieces are built in the profile-art workspace, one folder per piece, each with its own `build.sh`. After rebuilding them, run `node scripts/import_art.mjs <profile-art folder> [Pixelbolt checkout]`. It vendors Pixelbolt's browser modules with their licence, splits the phone hero's effects recipe into the three layers (and fails unless they recombine to the approved frames exactly), renders the hero still, inlines the shared palette into the hero's fluid sources, and copies each card's loop, hover burst and still. Bump the `?v=` query on `styles.css` and `script.js` in `index.html` when they change.
 
 Supporting projects have a shared card frame around the heading, media, description, and links. Their names appear above the media so each image or recording is clearly associated with its project.
 
-For a local preview, serve this directory with any static HTTP server, for example `python -m http.server 8766 --bind 127.0.0.1`. Regenerate the static study with `node scripts/generate_life.mjs` (requires Python + Pillow for WebP encoding).
+For a local preview, serve this directory with any static HTTP server, for example `python -m http.server 8766 --bind 127.0.0.1`. The hero's worker needs HTTP; it does not run from `file://`.
 
 ## Publishing
 
@@ -25,7 +40,7 @@ The `Publish portfolio` GitHub Actions workflow publishes pushes to `main` autom
 
 Keep personal contact details and private CV documents out of this public repository. Update image filenames when replacing screenshots if an old version remains cached.
 
-The Pause motion control stops the artificial-life animation and automatic video playback; Resume motion restores them. The system reduced-motion preference sets the initial state. Supporting projects share responsive rows, and social metadata uses a local screenshot of the introduction. Verify dated project results and repository section links when updating content.
+The Pause motion control stops the pixel-art animation and automatic video playback; Resume motion restores them. The system reduced-motion preference sets the initial state. Supporting projects share responsive rows, and social metadata uses a local screenshot of the introduction. Verify dated project results and repository section links when updating content.
 
 `litharness.html` is the outcome-focused walkthrough and unedited opening-chapter sample. The publishing workflow includes this page explicitly. Its chapter text and provenance are in `assets/litharness/`; preserve the source wording when changing presentation. The six additional experiments are in a native `<details>` disclosure that also works without JavaScript. LinkedIn is linked from Experience and the footer.
 
