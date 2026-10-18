@@ -201,11 +201,11 @@ async function mountHero(figure) {
     worker.addEventListener('message', ({ data }) => {
       if (live.worker !== worker) return;
       // A tap switches at once (the loop jumps a little anyway), so phones need only one cycle of warm-up.
-      if (data.loaded) { worker.postMessage({ init: forVariant, ...(coarse && { warmup: cycle() + 1 }) }); return; }
+      if (data.loaded) { worker.postMessage({ init: forVariant, warmup: warmupFrames() }); return; }
       if (data.error) { failLive(); return; }
       if (data.ready) {
         live.ready = true; live.frame = data.frame;
-        live.ms = data.warmup / (3 * cycle() + 1);
+        live.ms = data.warmup / warmupFrames();
         whenReady();
         return;
       }
@@ -237,15 +237,17 @@ async function mountHero(figure) {
   // changes. Late in the loop they wait at frame 0 for it to come round instead. A press before then switches at once.
   const SEAM = 88;
   const gated = () => coarse && !live.interacted;
+  // Desktop warms up the published loop's exact history (for the seamless switch); phones one cycle.
+  const warmupFrames = () => coarse ? cycle() + 1 : 3 * cycle() + 1;
   function whenReady() {
     if (live.pending) { const run = live.pending; live.pending = null; run(); return; }
-    if (live.eager && coarse) { switchNow(); return; }
+    if (coarse) { if (live.eager) switchNow(); return; }
     if (motion()) catchUp();
   }
   // Coarse pointers: live at once, from the frame the runners are on. Until their first step comes back (with the
   // tap in it), the loop's own fluid frames stay on screen.
   function switchNow() {
-    if (live.inFlight || !live.ready || live.on) return;
+    if (live.inFlight || !live.ready || live.on || !motion()) return;
     if (live.rendered !== live.frame) for (const key of Object.keys(liveCanvas)) delete liveCanvas[key];
     goLive();
     schedule();
@@ -509,6 +511,7 @@ async function mountHero(figure) {
     stopLive();
     live.failed = false;
     live.offset = 0;
+    live.interacted = false;
     for (const button of Object.values(buttons)) button.hidden = !window.Worker;
     variant = next; hero = data;
     canvas?.remove();
