@@ -94,7 +94,6 @@ h1 > span:last-child { font-size: .87em; }
 .study-controls { display: flex; justify-content: center; flex-wrap: wrap; align-items: center; gap: 0 20px; }
 .stir-flask, .add-heat, .motion-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 4px; border: 0; background: transparent; font-size: .875rem; color: var(--muted); }
 .stir-flask:hover, .add-heat:hover, .motion-toggle:hover { color: var(--mint); }
-.stir-flask[aria-disabled='true'], .add-heat[aria-disabled='true'] { color: #6b7182; cursor: progress; }
 
 /* The live Pixelbolt hero: the phone composition (156 x 180 art pixels) at 3x, or 2x on narrower layouts, drawn
    nearest-neighbour. The still is the same frame the animation starts on. Its width is the largest whole number of
@@ -115,8 +114,9 @@ h1 > span:last-child { font-size: .87em; }
 .hero-stage.is-ready > canvas { opacity: 1; }
 .hero-stage.is-ready picture { opacity: 0; }
 .hero-stage.is-target { cursor: pointer; }
-.hero-stage[aria-busy='true'] { cursor: progress; }
-.hero-caption { width: 0; min-width: 100%; margin-top: 2px; color: var(--muted); font: .75rem/1.6 var(--mono); letter-spacing: .02em; text-align: center; }
+.hero-stage.is-live.is-target { cursor: grab; }
+.hero-stage.is-live.is-dragging { cursor: grabbing; }
+.hero-caption { width: 0; min-width: 100%; min-height: 3.2em; margin-top: 2px; color: var(--muted); font: .75rem/1.6 var(--mono); letter-spacing: .02em; text-align: center; }
 .hero-caption a { color: var(--mint); text-decoration: underline; text-underline-offset: 3px; }
 
 /* Recorded work leads; supporting projects share columns and baselines. */

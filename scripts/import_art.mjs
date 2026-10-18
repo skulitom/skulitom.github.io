@@ -1,5 +1,6 @@
 // Refreshes the Pixelbolt pixel art in assets/pixel/ and the vendored Pixelbolt modules in assets/pixelbolt/.
-// Usage: node scripts/import_art.mjs <profile-art folder> [Pixelbolt checkout]
+// Usage: node scripts/import_art.mjs <profile-art folder> [Pixelbolt checkout] [commit]
+// The vendored modules come from the checkout's git objects at `commit` (default HEAD), never its working tree.
 // The profile-art folder holds one finished piece per subfolder (hero/, anode/, inkbolt/, cutbolt/, pixelbolt-card/,
 // nestbolt/), each built by its own build.sh. Nothing here draws pixels: Pixelbolt renders every sheet, and this
 // script cuts the hero's recipes into two crops and the layers a click can re-simulate (mostly still groups become a
@@ -9,8 +10,8 @@ import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const [artDir, pixelboltDir = path.join(artDir ?? '', 'Pixelbolt')] = process.argv.slice(2);
-if (!artDir) { console.error('Usage: node scripts/import_art.mjs <profile-art folder> [Pixelbolt checkout]'); process.exit(1); }
+const [artDir, pixelboltDir = path.join(artDir ?? '', 'Pixelbolt'), revision = 'HEAD'] = process.argv.slice(2);
+if (!artDir) { console.error('Usage: node scripts/import_art.mjs <profile-art folder> [Pixelbolt checkout] [commit]'); process.exit(1); }
 const site = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const pb = await import(pathToFileURL(path.join(pixelboltDir, 'src', 'index.js')).href);
 const { renderProject, buildAtlas, encodePNG, decodePNG, resolveReferences } = pb;
@@ -24,10 +25,11 @@ async function resolved(file) {
 // ---- vendored Pixelbolt: the fluid compiler, the renderer and the canvas player, unmodified
 const VENDORED = ['fluid.js', 'core.js', 'authoring.js', 'craft.js', 'autotile.js', 'font.js', 'runtime.js'];
 const vendor = path.join(site, 'assets', 'pixelbolt');
+const commit = execFileSync('git', ['-C', pixelboltDir, 'rev-parse', '--verify', `${revision}^{commit}`], { encoding: 'utf8' }).trim();
+const fromGit = file => execFileSync('git', ['-C', pixelboltDir, 'show', `${commit}:${file}`], { maxBuffer: 1 << 26 });
 rmSync(vendor, { recursive: true, force: true });
-for (const file of VENDORED) { mkdirSync(path.join(vendor, 'src'), { recursive: true }); copyFileSync(path.join(pixelboltDir, 'src', file), path.join(vendor, 'src', file)); }
-copyFileSync(path.join(pixelboltDir, 'LICENSE'), path.join(vendor, 'LICENSE'));
-const commit = execFileSync('git', ['-C', pixelboltDir, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+for (const file of VENDORED) write(path.join(vendor, 'src', file), fromGit(`src/${file}`));
+write(path.join(vendor, 'LICENSE'), fromGit('LICENSE'));
 write(path.join(vendor, 'SOURCE.txt'), `Pixelbolt (https://github.com/skulitom/Pixelbolt), MIT licence (LICENSE).\nCommit ${commit}.\nsrc/ holds ${VENDORED.join(', ')}, copied unmodified.\n`);
 
 // ---- the hero: two crops of the night workbench, each a still background plus looping layers cut from the piece's
@@ -136,17 +138,9 @@ for (const [variant, spec] of Object.entries(COMPOSITIONS)) {
       layers[group.name] = { x: at[0], y: at[1], width: project.width, height: project.height };
       drawn.push(i => [project.frames[i].data, project.width, project.height, ...at]);
       const effect = Object.values(source.effects)[0];
-      // Steam: the vent, the art's two biggest billows (a visitor's heat burst re-times them) and the box the plume
-      // fills in at least half the frames (a visitor's swirl stays inside it). Liquid: the flask's bulb.
-      const plume = (() => {
-        const counts = new Uint16Array(project.width * project.height);
-        for (const frame of project.frames) for (let k = 0; k < counts.length; k++) if (frame.data[k * 4 + 3]) counts[k]++;
-        let [x0, y0, x1, y1] = [project.width, project.height, -1, -1];
-        counts.forEach((n, k) => { if (n * 2 < project.frames.length) return; const x = k % project.width, y = Math.floor(k / project.width); x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); });
-        return [x0, y0, x1, y1];
-      })();
+      // Steam: the vent and the art's biggest billows (a visitor's puff is sized from them). Liquid: the flask's bulb.
       fluids[group.name] = { source: `${group.source}.fluid.json`, effect: Object.keys(source.effects)[0], ...(group.name === 'steam' ? {
-        vent: effect.emitters.find(e => e.name === 'breath').at, plume,
+        vent: effect.emitters.find(e => e.name === 'breath').at,
         billows: effect.emitters.filter(e => e.name.startsWith('billow')).sort((a, b) => b.radius * b.density - a.radius * a.density).slice(0, 2)
       } : { bulb: { at: effect.fill[0].at, radius: effect.fill[0].radius } }) };
       if (group.name === 'steam') render.steamExtras = extras;
