@@ -7,7 +7,7 @@
  */
 import { loadSpriteSheet, drawFrame, frameAt } from '../pixelbolt/src/runtime.js';
 
-const VERSION = 4;                    // bump with the art so caches never pair new data with old
+const VERSION = 5;                    // bump with the art so caches never pair new data with old
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const players = new Set();
 let motion = () => true;
@@ -99,7 +99,7 @@ async function mountHero(figure) {
   const touch = window.matchMedia('(hover: none)').matches;
 
   // ---- the live runners (live-worker.js): warmed up after the first paint, then stepped once per 70 ms frame
-  const live = { worker: null, ready: false, on: false, frame: 0, inFlight: false, sent: 0, request: 0, ms: 0, shownMs: 0, pending: null, wanted: null, holdUntil: null, eager: false, scripts: [], paintAt: 0 };
+  const live = { worker: null, ready: false, failed: false, on: false, still: false, frame: 0, rendered: -1, inFlight: false, sent: 0, request: 0, ms: 0, shownMs: 0, pending: null, wanted: null, holdUntil: null, eager: false, scripts: [], paintAt: 0 };
   const liveCanvas = {};
   const ink = (layer, pixels) => {
     const { width, height } = hero.layers[layer];
@@ -109,8 +109,19 @@ async function mountHero(figure) {
     targetContext.putImageData(new ImageData(pixels, width, height), 0, 0);
   };
 
-  function caption(text) { status.textContent = text; }
-  caption('Pixel art made with Pixelbolt.');
+  // The caption keeps one Pixelbolt link (so keyboard focus on it survives updates) between two runs of text. Press
+  // results and the switch to live are also announced once through a visually hidden status region.
+  const link = status.querySelector('a') ?? Object.assign(document.createElement('a'), { href: 'https://github.com/skulitom/Pixelbolt', textContent: 'Pixelbolt' });
+  const head = document.createTextNode(''), tail = document.createTextNode('');
+  status.replaceChildren(head, link, tail);
+  const announcer = Object.assign(document.createElement('span'), { className: 'visually-hidden' });
+  announcer.setAttribute('role', 'status');
+  status.after(announcer);
+  function caption(before, after, announce = false) {
+    head.data = before; tail.data = after;
+    if (announce) announcer.textContent = `${before}Pixelbolt${after}`;
+  }
+  caption('Pixel art made with ', '.');
 
   const file = name => versioned(new URL(`hero/${variant}/${name}`, import.meta.url));
   const sheetLayer = sheet => {
@@ -140,7 +151,9 @@ async function mountHero(figure) {
       stage.append(canvas);
       fit();
       stage.classList.add('is-ready');
-    })().catch(error => { loading = null; throw error; });
+    })();
+    const attempt = loading;
+    loading.catch(() => { if (loading === attempt) loading = null; });
     return loading;
   }
 
@@ -170,27 +183,40 @@ async function mountHero(figure) {
   }
 
   // ---- worker plumbing
+  // A worker that fails (no module workers, a missing source, an engine error) is not restarted for this crop: the
+  // pre-rendered loop stays, and the buttons, which need it, are hidden.
   function startLive() {
-    if (live.worker || !window.Worker) return;
+    if (live.worker || live.failed || !window.Worker) return;
     let worker;
-    try { worker = new Worker(versioned(new URL('live-worker.js', import.meta.url)), { type: 'module' }); } catch { return; }
+    try { worker = new Worker(versioned(new URL('live-worker.js', import.meta.url)), { type: 'module' }); } catch { failLive(); return; }
     live.worker = worker;
     const forVariant = variant;
     worker.addEventListener('message', ({ data }) => {
       if (live.worker !== worker) return;
       if (data.loaded) { worker.postMessage({ init: forVariant }); return; }
-      if (data.error) { stopLive(); return; }
-      if (data.ready) { live.ready = true; live.frame = data.frame; whenReady(); return; }
+      if (data.error) { failLive(); return; }
+      if (data.ready) {
+        live.ready = true; live.frame = data.frame;
+        live.ms = data.warmup / (3 * cycle() + 1);
+        whenReady();
+        return;
+      }
       received(data);
     });
-    worker.addEventListener('error', event => { event.preventDefault(); if (live.worker === worker) stopLive(); });
+    worker.addEventListener('error', event => { event.preventDefault(); if (live.worker === worker) failLive(); });
   }
   function stopLive() {
     live.worker?.terminate();
     const wasOn = live.on;
-    Object.assign(live, { worker: null, ready: false, on: false, still: false, inFlight: false, pending: null, wanted: null, holdUntil: null, eager: false, scripts: [] });
+    Object.assign(live, { worker: null, ready: false, on: false, still: false, rendered: -1, inFlight: false, pending: null, wanted: null, holdUntil: null, eager: false, scripts: [] });
+    stage.classList.remove('is-live');
     if (wasOn) { time = live.frame % cycle() * MS(); paint(); }
-    caption('Pixel art made with Pixelbolt.');
+    caption('Pixel art made with ', '.');
+  }
+  function failLive() {
+    stopLive();
+    live.failed = true;
+    for (const button of Object.values(buttons)) button.hidden = true;
   }
   function send(advance, inputs, render) {
     live.inFlight = true;
@@ -212,30 +238,48 @@ async function mountHero(figure) {
     const behind = (at - here + cycle()) % cycle();
     const lead = START_LEAD + Math.ceil(behind * Math.max(live.ms, 10) / MS());
     const target = live.frame < cycle() && here + behind + lead >= SEAM && !live.eager ? 0 : behind + lead;
+    // Waiting where the runners already are: hold their rendered frame until the loop comes round to it.
+    if (target === 0 && live.rendered === live.frame) { live.holdUntil = here; return; }
     live.wanted = 'switch';
     send(Math.min(target, cycle() - 1), [], true);
+  }
+  // Back to live after a pause or a still: straight on from a still (the page shows the runners' own frame), else
+  // catch up to the loop.
+  function resumeLive() {
+    if (live.inFlight || !live.ready || live.on || live.holdUntil !== null || !motion()) return;
+    if (live.still) goLive(); else catchUp();
+  }
+  // After each reply: a press that arrived meanwhile runs now, and a resume that arrived meanwhile carries on.
+  function afterReply() {
+    if (live.inFlight) return;
+    if (live.pending && live.ready) { const run = live.pending; live.pending = null; run(); return; }
+    resumeLive();
   }
   function received(data) {
     live.inFlight = false;
     live.frame = data.frame;
     if (data.ms) { live.ms = live.ms ? live.ms * 0.8 + data.ms * 0.2 : data.ms; live.counted = (live.counted ?? 0) + 1; }
-    if (data.steam) { ink('steam', data.steam); ink('liquid', data.liquid); }
+    if (data.steam) { ink('steam', data.steam); ink('liquid', data.liquid); live.rendered = data.frame; }
     const wanted = live.wanted;
     live.wanted = null;
     if (wanted === 'switch') {
       // Hold this frame until the loop on screen reaches it; if the loop already passed it, catch up again. A visitor
       // who pressed or clicked meanwhile gets the live frame at once. Paused meanwhile: wait for Resume.
-      if (!motion()) return;
-      const ahead = (live.frame % cycle() - Math.floor(time / MS()) % cycle() + cycle()) % cycle();
-      if (live.eager || ahead === 0) goLive();
-      else if (ahead > cycle() / 2) catchUp();
-      else live.holdUntil = live.frame % cycle();
-      return;
+      if (motion()) {
+        const ahead = (live.frame % cycle() - Math.floor(time / MS()) % cycle() + cycle()) % cycle();
+        if (live.eager || ahead === 0) goLive();
+        else if (ahead > cycle() / 2) catchUp();
+        else live.holdUntil = live.frame % cycle();
+      }
+    } else if (wanted === 'still') {
+      time = live.frame % cycle() * MS();
+      showStill(true);
+    } else {
+      if (wanted === 'interactive' && live.paintAt) { live.latency = performance.now() - live.paintAt; live.paintAt = 0; figure.dataset.liveLatency = Math.round(live.latency); }
+      paint();
+      if (live.on && motion()) updateCaption();
     }
-    if (wanted === 'still') { time = live.frame % cycle() * MS(); showStill(true); return; }
-    if (wanted === 'interactive' && live.paintAt) { live.latency = performance.now() - live.paintAt; live.paintAt = 0; figure.dataset.liveLatency = Math.round(live.latency); }
-    paint();
-    updateCaption();
+    afterReply();
   }
   function goLive() {
     // For checks: the frame the switch happened on, and the loop's frame at that moment (equal unless a press forced it).
@@ -244,6 +288,7 @@ async function mountHero(figure) {
     live.still = false;
     live.holdUntil = null;
     live.eager = false;
+    pointer.last = null;
     // The frame cost is measured afresh once live (catching up includes the engine's first, slower runs).
     live.ms = 0; live.counted = 0; live.shownMs = 0;
     stage.classList.add('is-live');
@@ -255,8 +300,7 @@ async function mountHero(figure) {
     const counted = live.counted >= 15, ms = Math.max(1, Math.round(live.ms)), now = performance.now();
     if (!force && (!counted || (live.shownMs && (Math.abs(ms - live.shownMs) < 2 || now - live.shownAt < 4000)))) return;
     if (counted) { live.shownMs = ms; live.shownAt = now; figure.dataset.liveMs = ms; }
-    status.replaceChildren('Running live in your browser: ', Object.assign(document.createElement('a'),
-      { href: 'https://github.com/skulitom/Pixelbolt', textContent: 'Pixelbolt' }), ` fluid simulation${counted ? `, ${ms} ms a frame` : ''}. ${touch ? 'Tap' : 'Hover, click or drag'} the steam and the flask.`);
+    caption('Running live in your browser: ', ` fluid simulation${counted ? `, ${ms} ms a frame` : ''}. ${touch ? 'Tap' : 'Hover, click or drag'} the steam and the flask.`, force);
   }
 
   // ---- inputs: gathered between frames, sent with the next step
@@ -332,10 +376,11 @@ async function mountHero(figure) {
     if (live.on) return;
     // Not live yet: switch as soon as the runners can show a frame (the loop may jump a little).
     live.eager = true;
-    if (!live.worker) { caption('Starting the live simulation…'); startLive(); }
+    if (live.failed) return;
+    if (!live.worker) { caption('Pixel art made with ', '. Starting the live simulation…', true); startLive(); }
     else if (live.holdUntil !== null) goLive();
-    else if (live.ready) catchUp();
-    else caption('Starting the live simulation…');
+    else if (live.ready) resumeLive();
+    else caption('Pixel art made with ', '. Starting the live simulation…', true);
   }
   function runStill(inputsFor, length, settle) {
     const run = () => {
@@ -344,7 +389,8 @@ async function mountHero(figure) {
       send(length + settle, inputs, true);
       load().catch(() => {});
     };
-    if (!live.worker) { caption('Starting the live simulation…'); live.pending = run; startLive(); return; }
+    if (live.failed) return;
+    if (!live.worker) { caption('Pixel art made with ', '. Starting the live simulation…', true); live.pending = run; startLive(); return; }
     if (!live.ready || live.inFlight) { live.pending = run; return; }
     run();
   }
@@ -353,8 +399,7 @@ async function mountHero(figure) {
     live.on = false;
     live.still = true;
     stage.classList.remove('is-live');
-    if (result) status.replaceChildren('Simulated in your browser by ', Object.assign(document.createElement('a'),
-      { href: 'https://github.com/skulitom/Pixelbolt', textContent: 'Pixelbolt' }), `, ${Math.max(1, Math.round(live.ms))} ms a frame.`);
+    if (result) caption('Simulated in your browser by ', `, ${Math.max(1, Math.round(live.ms))} ms a frame.`, true);
     paint();
   }
 
@@ -385,8 +430,7 @@ async function mountHero(figure) {
     live.paintAt = performance.now();
     act(() => inputs, 1, 9);
   });
-  buttons.stir.hidden = false;
-  buttons.heat.hidden = false;
+  buttons.stir.hidden = buttons.heat.hidden = !window.Worker;
   buttons.stir.addEventListener('click', () => { live.paintAt = performance.now(); act(SCRIPTS.stir, STIR_FRAMES, 6); });
   buttons.heat.addEventListener('click', () => { live.paintAt = performance.now(); act(SCRIPTS.heat, HEAT_FRAMES, 0); });
 
@@ -401,7 +445,11 @@ async function mountHero(figure) {
         const at = Math.floor(time / MS());
         if (at === before) return;
         live.still = false;
-        if (live.holdUntil !== null && at === live.holdUntil) { goLive(); return; }
+        // Switch on the held frame, even if a slow frame skipped past it.
+        if (live.holdUntil !== null) {
+          const due = (live.holdUntil - before + cycle()) % cycle(), moved = (at - before + cycle()) % cycle();
+          if (due > 0 && due <= moved) { goLive(); return; }
+        }
         paint();
         return;
       }
@@ -418,7 +466,7 @@ async function mountHero(figure) {
       if (!player.running()) { last = 0; pointer.last = null; }
       if (motion() && visible && !layers) load().then(() => player.sync(), failLoad);
       if (motion() && visible && layers && !live.worker) idleThen(startLive);
-      if (motion() && live.ready && !live.on) catchUp();
+      if (motion() && live.ready && !live.on) resumeLive();
       if (!motion() && live.on) { time = live.frame % cycle() * MS(); showStill(false); }
       schedule();
     },
@@ -437,7 +485,10 @@ async function mountHero(figure) {
     if (next === variant) return;
     let data;
     try { data = await crop(next); } catch { return; }
+    if ((wide.matches ? 'wide' : 'narrow') !== next || next === variant) return;
     stopLive();
+    live.failed = false;
+    for (const button of Object.values(buttons)) button.hidden = !window.Worker;
     variant = next; hero = data;
     canvas?.remove();
     canvas = context = art = artContext = layers = loading = null;

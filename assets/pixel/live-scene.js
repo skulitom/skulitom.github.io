@@ -4,7 +4,8 @@
  * Each runner warms up three cycles plus one frame, the same history the published loop compiled, so live frame n
  * shows exactly the approved loop's frame n (up to the loop's seam blend, its last few frames) and the page can switch
  * from the pre-rendered loop to the live one without a visible change. */
-import { createLiveFluid } from '../pixelbolt/src/fluid.js';
+// fluid.js gained createLiveFluid in 671690f; the query keeps a cached older copy from being paired with this file.
+import { createLiveFluid } from '../pixelbolt/src/fluid.js?v=671690f';
 import { renderProject } from '../pixelbolt/src/core.js';
 
 export const LAYERS = ['steam', 'liquid'];

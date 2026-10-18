@@ -118,6 +118,7 @@ h1 > span:last-child { font-size: .87em; }
 .hero-stage.is-live.is-dragging { cursor: grabbing; }
 .hero-caption { width: 0; min-width: 100%; min-height: 3.2em; margin-top: 2px; color: var(--muted); font: .75rem/1.6 var(--mono); letter-spacing: .02em; text-align: center; }
 .hero-caption a { color: var(--mint); text-decoration: underline; text-underline-offset: 3px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* Recorded work leads; supporting projects share columns and baselines. */
 .section { padding-block: 88px; }
