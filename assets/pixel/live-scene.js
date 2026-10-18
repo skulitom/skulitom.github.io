@@ -11,8 +11,9 @@ import { renderProject } from '../pixelbolt/src/core.js';
 export const LAYERS = ['steam', 'liquid'];
 const METHODS = new Set(['push', 'puff', 'boost']);
 
-export function createLiveHero(hero, sources) {
-  const fluids = Object.fromEntries(LAYERS.map(layer => [layer, createLiveFluid(sources[layer], { effect: hero[layer].effect, warmup: 3 * hero.frames + 1 })]));
+// `warmup` defaults to that exact history; a page that switches on a tap anyway may ask for less.
+export function createLiveHero(hero, sources, { warmup = 3 * hero.frames + 1 } = {}) {
+  const fluids = Object.fromEntries(LAYERS.map(layer => [layer, createLiveFluid(sources[layer], { effect: hero[layer].effect, warmup })]));
   let frame = 0;
 
   // The steam layer adds the art's own recipe ops on top of the gas (its fade, the flask's mint light, on the phone

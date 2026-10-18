@@ -7,7 +7,7 @@
  */
 import { loadSpriteSheet, drawFrame, frameAt } from '../pixelbolt/src/runtime.js';
 
-const VERSION = 5;                    // bump with the art so caches never pair new data with old
+const VERSION = 6;                    // bump with the art so caches never pair new data with old
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const players = new Set();
 let motion = () => true;
@@ -97,9 +97,15 @@ async function mountHero(figure) {
   let art = null, artContext = null, canvas = null, context = null, layers = null, loading = null;
   let time = hero.still * hero.duration, last = 0, visible = false;
   const touch = window.matchMedia('(hover: none)').matches;
+  // Phones and tablets keep the pre-rendered loop until the first tap on the hero or a press of a button: the runners
+  // warm up in idle time after the first paint, then stay still (no frames stepped) until that first interaction.
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
 
   // ---- the live runners (live-worker.js): warmed up after the first paint, then stepped once per 70 ms frame
-  const live = { worker: null, ready: false, failed: false, on: false, still: false, frame: 0, rendered: -1, inFlight: false, sent: 0, request: 0, ms: 0, shownMs: 0, pending: null, wanted: null, holdUntil: null, eager: false, scripts: [], paintAt: 0 };
+  // `offset` maps the runners' frame to the loop's: 0 after a seamless switch; after a switch at once (an early tap or
+  // press), the loop's other layers carry on from where they were.
+  const live = { worker: null, ready: false, failed: false, on: false, still: false, frame: 0, offset: 0, rendered: -1, inFlight: false, sent: 0, request: 0, ms: 0, shownMs: 0, pending: null, wanted: null, holdUntil: null, eager: false, interacted: false, scripts: [], paintAt: 0 };
+  const liveAt = () => (live.frame + live.offset) % cycle();
   const liveCanvas = {};
   const ink = (layer, pixels) => {
     const { width, height } = hero.layers[layer];
@@ -121,7 +127,8 @@ async function mountHero(figure) {
     head.data = before; tail.data = after;
     if (announce) announcer.textContent = `${before}Pixelbolt${after}`;
   }
-  caption('Pixel art made with ', '.');
+  const idleCaption = () => caption('Pixel art made with ', coarse && motion() ? '. Tap it to run it live.' : '.');
+  idleCaption();
 
   const file = name => versioned(new URL(`hero/${variant}/${name}`, import.meta.url));
   const sheetLayer = sheet => {
@@ -166,7 +173,7 @@ async function mountHero(figure) {
   }
 
   // The scene's frame: the loop's clock until the live runners take over, then theirs.
-  const frame = () => live.on ? live.frame % cycle() : Math.floor(time / MS()) % cycle();
+  const frame = () => live.on ? liveAt() : Math.floor(time / MS()) % cycle();
   function paint() {
     if (!canvas || !layers) return;
     const i = frame();
@@ -193,7 +200,8 @@ async function mountHero(figure) {
     const forVariant = variant;
     worker.addEventListener('message', ({ data }) => {
       if (live.worker !== worker) return;
-      if (data.loaded) { worker.postMessage({ init: forVariant }); return; }
+      // A tap switches at once (the loop jumps a little anyway), so phones need only one cycle of warm-up.
+      if (data.loaded) { worker.postMessage({ init: forVariant, ...(coarse && { warmup: cycle() + 1 }) }); return; }
       if (data.error) { failLive(); return; }
       if (data.ready) {
         live.ready = true; live.frame = data.frame;
@@ -210,8 +218,8 @@ async function mountHero(figure) {
     const wasOn = live.on;
     Object.assign(live, { worker: null, ready: false, on: false, still: false, rendered: -1, inFlight: false, pending: null, wanted: null, holdUntil: null, eager: false, scripts: [] });
     stage.classList.remove('is-live');
-    if (wasOn) { time = live.frame % cycle() * MS(); paint(); }
-    caption('Pixel art made with ', '.');
+    if (wasOn) { time = liveAt() * MS(); paint(); }
+    idleCaption();
   }
   function failLive() {
     stopLive();
@@ -228,13 +236,23 @@ async function mountHero(figure) {
   // frames (until its seam blend, the last few frames), so the switch happens on a frame both show and nothing visibly
   // changes. Late in the loop they wait at frame 0 for it to come round instead. A press before then switches at once.
   const SEAM = 88;
+  const gated = () => coarse && !live.interacted;
   function whenReady() {
     if (live.pending) { const run = live.pending; live.pending = null; run(); return; }
+    if (live.eager && coarse) { switchNow(); return; }
     if (motion()) catchUp();
   }
+  // Coarse pointers: live at once, from the frame the runners are on. Until their first step comes back (with the
+  // tap in it), the loop's own fluid frames stay on screen.
+  function switchNow() {
+    if (live.inFlight || !live.ready || live.on) return;
+    if (live.rendered !== live.frame) for (const key of Object.keys(liveCanvas)) delete liveCanvas[key];
+    goLive();
+    schedule();
+  }
   function catchUp() {
-    if (live.inFlight || !live.ready || live.on || !motion()) return;
-    const at = Math.floor(time / MS()) % cycle(), here = live.frame % cycle();
+    if (live.inFlight || !live.ready || live.on || !motion() || gated()) return;
+    const at = Math.floor(time / MS()) % cycle(), here = liveAt();
     const behind = (at - here + cycle()) % cycle();
     const lead = START_LEAD + Math.ceil(behind * Math.max(live.ms, 10) / MS());
     const target = live.frame < cycle() && here + behind + lead >= SEAM && !live.eager ? 0 : behind + lead;
@@ -246,8 +264,8 @@ async function mountHero(figure) {
   // Back to live after a pause or a still: straight on from a still (the page shows the runners' own frame), else
   // catch up to the loop.
   function resumeLive() {
-    if (live.inFlight || !live.ready || live.on || live.holdUntil !== null || !motion()) return;
-    if (live.still) goLive(); else catchUp();
+    if (live.inFlight || !live.ready || live.on || live.holdUntil !== null || !motion() || gated()) return;
+    if (live.still) goLive(); else if (coarse) switchNow(); else catchUp();
   }
   // After each reply: a press that arrived meanwhile runs now, and a resume that arrived meanwhile carries on.
   function afterReply() {
@@ -266,13 +284,13 @@ async function mountHero(figure) {
       // Hold this frame until the loop on screen reaches it; if the loop already passed it, catch up again. A visitor
       // who pressed or clicked meanwhile gets the live frame at once. Paused meanwhile: wait for Resume.
       if (motion()) {
-        const ahead = (live.frame % cycle() - Math.floor(time / MS()) % cycle() + cycle()) % cycle();
+        const ahead = (liveAt() - Math.floor(time / MS()) % cycle() + cycle()) % cycle();
         if (live.eager || ahead === 0) goLive();
         else if (ahead > cycle() / 2) catchUp();
-        else live.holdUntil = live.frame % cycle();
+        else live.holdUntil = liveAt();
       }
     } else if (wanted === 'still') {
-      time = live.frame % cycle() * MS();
+      time = liveAt() * MS();
       showStill(true);
     } else {
       if (wanted === 'interactive' && live.paintAt) { live.latency = performance.now() - live.paintAt; live.paintAt = 0; figure.dataset.liveLatency = Math.round(live.latency); }
@@ -284,6 +302,7 @@ async function mountHero(figure) {
   function goLive() {
     // For checks: the frame the switch happened on, and the loop's frame at that moment (equal unless a press forced it).
     figure.dataset.liveSwitch = `${live.frame}:${Math.floor(time / MS()) % cycle()}`;
+    live.offset = (Math.floor(time / MS()) - live.frame % cycle() + cycle()) % cycle();
     live.on = true;
     live.still = false;
     live.holdUntil = null;
@@ -371,6 +390,7 @@ async function mountHero(figure) {
   // Live: inputs and scripts join the next step. With motion off (reduced motion, Pause motion), a press runs the whole
   // interaction at once in the worker and shows the frame it ends on.
   function act(inputsFor, length, settle) {
+    live.interacted = true;
     if (!motion()) { runStill(inputsFor, length, settle); return; }
     live.scripts.push({ inputsFor, length, k: 0 });
     if (live.on) return;
@@ -379,7 +399,7 @@ async function mountHero(figure) {
     if (live.failed) return;
     if (!live.worker) { caption('Pixel art made with ', '. Starting the live simulation…', true); startLive(); }
     else if (live.holdUntil !== null) goLive();
-    else if (live.ready) resumeLive();
+    else if (live.ready) coarse ? switchNow() : resumeLive();
     else caption('Pixel art made with ', '. Starting the live simulation…', true);
   }
   function runStill(inputsFor, length, settle) {
@@ -426,7 +446,7 @@ async function mountHero(figure) {
   stage.addEventListener('click', event => {
     if (pointer.dragging) { pointer.dragging = false; return; }
     const [x, y] = toArt(event), inputs = clickInputs(x, y);
-    if (!inputs.length) return;
+    if (!inputs.length) { if (coarse && !live.on && motion()) act(() => [], 1, 0); return; }
     live.paintAt = performance.now();
     act(() => inputs, 1, 9);
   });
@@ -467,7 +487,7 @@ async function mountHero(figure) {
       if (motion() && visible && !layers) load().then(() => player.sync(), failLoad);
       if (motion() && visible && layers && !live.worker) idleThen(startLive);
       if (motion() && live.ready && !live.on) resumeLive();
-      if (!motion() && live.on) { time = live.frame % cycle() * MS(); showStill(false); }
+      if (!motion() && live.on) { time = liveAt() * MS(); showStill(false); }
       schedule();
     },
     fit
@@ -488,6 +508,7 @@ async function mountHero(figure) {
     if ((wide.matches ? 'wide' : 'narrow') !== next || next === variant) return;
     stopLive();
     live.failed = false;
+    live.offset = 0;
     for (const button of Object.values(buttons)) button.hidden = !window.Worker;
     variant = next; hero = data;
     canvas?.remove();
