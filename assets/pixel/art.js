@@ -1,13 +1,13 @@
-/* The portfolio's pixel art: a live fluid hero and five tool cards, all made with Pixelbolt.
- * Sheets are drawn with Pixelbolt's own canvas player at whole device pixels per art pixel. A click on the hero's
- * flask or steam re-runs that fluid's source with one extra emitter in a worker (Pixelbolt's compiler and renderer),
- * then dissolves the new loop in through a Bayer mask, so every pixel stays a palette colour. Nothing here runs
- * until the page has painted its static stills, and nothing animates offscreen, in background tabs, or with motion off.
- * Frames are 70 ms, so each player paints only when its frame changes: at most about 14 times a second.
+/* The portfolio's pixel art: a live fluid hero, five tool cards and a footer strip, all made with Pixelbolt.
+ * Sheets are drawn with Pixelbolt's own canvas player at whole device pixels per art pixel. The hero's steam and flask
+ * run live in a worker (Pixelbolt's createLiveFluid, a frame at a time), so hovering, clicking, dragging and the two
+ * buttons change the simulation on the next frame. Nothing here runs until the page has painted its static stills,
+ * and nothing animates offscreen, in background tabs, or with motion off. Frames are 70 ms, so each player paints
+ * only when its frame changes: at most about 14 times a second.
  */
 import { loadSpriteSheet, drawFrame, frameAt } from '../pixelbolt/src/runtime.js';
 
-const VERSION = 3;                    // bump with the art so caches never pair new data with old
+const VERSION = 5;                    // bump with the art so caches never pair new data with old
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const players = new Set();
 let motion = () => true;
@@ -67,36 +67,19 @@ function dissolve(from, to, level) {
 // picks the <picture> still in index.html and the stage's shape in styles.css.
 const WIDE = '(min-width: 1200px), (min-width: 540px) and (max-width: 820px)';
 
-// The extra emitters a click adds. `start` is the frame of the live loop the visitor's event begins on.
-// - heat (Add heat, or a click at the neck): the art's own biggest billow again, from the vent
-// - swirl (a click on the plume): a vortex at that point that rolls the steam into a curl, sized to the crop
-// - stir (Stir the flask, or a click on it): a vortex in the liquid with a rush of bubbles
-const EMITTERS = {
-  heat: (at, start, steam) => steam.billows.slice(0, 1).map(billow => ({ ...billow, name: 'visitor-heat', at,
-    start, end: start + ((billow.end ?? (billow.start ?? 0) + 3) - (billow.start ?? 0)) })),
-  swirl: (at, start, steam, spin) => [{ name: 'visitor-swirl', at, radius: Math.max(6, steam.billows[0].radius * 2.2),
-    rate: 1, density: 0, start, end: start + 10, vortex: 2.2 * spin, velocity: [0, -0.4] }],
-  stir: (at, start, liquid, spin) => [
-    { name: 'stir', at, radius: 12, rate: 1, density: 0, start, end: start + 10, vortex: 2.2 * spin },
-    { name: 'stir-bubbles', at: [at[0], at[1] + 2], area: [14, 4], rate: 1, density: 0, start: start + 1, end: start + 11,
-      sparks: { count: 1.2, life: [14, 24], colors: ['n', 'm'], size: 1, angle: 270, speed: 0.8, gravity: [0, -0.1],
-        drag: 0.05, follow: 0.5, pop: true } }
-  ]
-};
-// A live compile skips most of the warm-up the published art used (its loop is already settled after one cycle).
-// The steam also uses fewer pressure iterations and a 48-frame loop (the second half of the art's billows: the big
-// surge and two calmer ones, played twice per scene loop), so a click stays under a second even on the desktop
-// crop's larger canvas. With the published settings, the same sources reproduce the approved loops exactly.
-const SETTINGS = { steam: { warmup: 1, iterations: 12, frames: 48, offset: 48 }, liquid: { warmup: 1 } };
-const LONGEST = { steam: 10, liquid: 12 };    // frames the visitor's emitters span (windows can't wrap the loop)
-const SHOW = { heat: 12, swirl: 10, stir: 19 };   // frames after the start that make the best still
-const STILL_STARTS = { steam: [6, 18, 30], liquid: [6, 22, 38, 66] };   // motion off: a different moment each press
-const DISSOLVE = 4;
+// Interactions, in each fluid's own pixels per 70 ms frame. Pointer speeds are measured in art pixels.
+const HOVER = { gain: 0.55, radius: 5 };            // the steam follows a moving cursor
+const DRAG = { gain: 0.9, radius: 7, liquid: 0.8 };  // a held button stirs the steam, or sloshes the flask
+const STIR_FRAMES = 17;                              // "Stir the flask": about 1.2 s
+const HEAT_FRAMES = 43;                              // "Add heat": about 3 s
+// "Add heat" raises these emitters' strength (unknown names are skipped, so both crops share the list).
+const HEAT_BOOSTS = { liquid: [['heat', 2.5], ['boil', 2.5], ['bubbles', 3], ['big-bubbles', 3], ['surge', 2]], steam: [['breath', 2.5]] };
+const START_LEAD = 3;                                // frames of slack when catching the live runners up to the loop
 
 async function mountHero(figure) {
   const stage = figure.querySelector('.hero-stage');
   const status = figure.querySelector('.hero-status');
-  const buttons = { liquid: figure.querySelector('.stir-flask'), steam: figure.querySelector('.add-heat') };
+  const buttons = { stir: figure.querySelector('.stir-flask'), heat: figure.querySelector('.add-heat') };
   const wide = window.matchMedia(WIDE);
   const crops = new Map();
   const crop = name => {
@@ -110,30 +93,45 @@ async function mountHero(figure) {
   };
   let variant = wide.matches ? 'wide' : 'narrow';
   let hero = await crop(variant);
+  const cycle = () => hero.frames, MS = () => hero.duration;
   let art = null, artContext = null, canvas = null, context = null, layers = null, loading = null;
-  let worker = null, pending = null, fade = null;
-  let time = hero.still * hero.duration, last = 0, visible = false, busy = false, request = 0, spin = 1, presses = 0;
-  // How long a re-simulation takes here, so the visitor's event can start just after the result arrives.
-  const estimate = { steam: 1100, liquid: 550 };
+  let time = hero.still * hero.duration, last = 0, visible = false;
   const touch = window.matchMedia('(hover: none)').matches;
-  status.textContent = `${touch ? 'Tap' : 'Click'} the flask or the steam to simulate it live in your browser.`;
-  status.setAttribute('role', 'status');
+
+  // ---- the live runners (live-worker.js): warmed up after the first paint, then stepped once per 70 ms frame
+  const live = { worker: null, ready: false, failed: false, on: false, still: false, frame: 0, rendered: -1, inFlight: false, sent: 0, request: 0, ms: 0, shownMs: 0, pending: null, wanted: null, holdUntil: null, eager: false, scripts: [], paintAt: 0 };
+  const liveCanvas = {};
+  const ink = (layer, pixels) => {
+    const { width, height } = hero.layers[layer];
+    liveCanvas[layer] ??= makeCanvas(width, height);
+    const [target, targetContext] = liveCanvas[layer];
+    if (target.width !== width || target.height !== height) { target.width = width; target.height = height; }
+    targetContext.putImageData(new ImageData(pixels, width, height), 0, 0);
+  };
+
+  // The caption keeps one Pixelbolt link (so keyboard focus on it survives updates) between two runs of text. Press
+  // results and the switch to live are also announced once through a visually hidden status region.
+  const link = status.querySelector('a') ?? Object.assign(document.createElement('a'), { href: 'https://github.com/skulitom/Pixelbolt', textContent: 'Pixelbolt' });
+  const head = document.createTextNode(''), tail = document.createTextNode('');
+  status.replaceChildren(head, link, tail);
+  const announcer = Object.assign(document.createElement('span'), { className: 'visually-hidden' });
+  announcer.setAttribute('role', 'status');
+  status.after(announcer);
+  function caption(before, after, announce = false) {
+    head.data = before; tail.data = after;
+    if (announce) announcer.textContent = `${before}Pixelbolt${after}`;
+  }
+  caption('Pixel art made with ', '.');
 
   const file = name => versioned(new URL(`hero/${variant}/${name}`, import.meta.url));
-  // Layers loop on their own length: the live steam is 48 frames inside the 96-frame scene.
   const sheetLayer = sheet => {
     const names = sheet.atlas.animations.loop.frames;
     return (target, i, x, y) => drawFrame(target, sheet, names[i % names.length], x, y, { anchor: false });
   };
-  const stripLayer = ({ width, height, count, pixels }) => {
-    const [strip, stripContext] = makeCanvas(width, height * count);
-    stripContext.putImageData(new ImageData(pixels, width, height * count), 0, 0);
-    return (target, i, x, y) => target.drawImage(strip, 0, (i % count) * height, width, height, x, y, width, height);
-  };
   // A mostly still group is one still plus the small box that moves, drawn over it.
   const splitLayer = (still, moving, box) => (target, i, x, y) => {
     target.drawImage(still, x, y);
-    target.drawImage(moving, 0, i * box.height, box.width, box.height, x + box.x, y + box.y, box.width, box.height);
+    target.drawImage(moving, 0, (i % cycle()) * box.height, box.width, box.height, x + box.x, y + box.y, box.width, box.height);
   };
 
   function load() {
@@ -147,31 +145,17 @@ async function mountHero(figure) {
       const bg = await loadImage(file('bg.png'));
       if (forVariant !== variant) throw new Error('the crop changed while loading');
       layers = { bg, ...Object.fromEntries(entries) };
-      [art, artContext] = makeCanvas(hero.width, hero.height, true);
+      [art, artContext] = makeCanvas(hero.width, hero.height);
       [canvas, context] = makeCanvas(hero.width, hero.height);
       canvas.setAttribute('aria-hidden', 'true');
       stage.append(canvas);
       fit();
       stage.classList.add('is-ready');
-    })().catch(error => { loading = null; throw error; });
+    })();
+    const attempt = loading;
+    loading.catch(() => { if (loading === attempt) loading = null; });
     return loading;
   }
-
-  // A resize across the breakpoint swaps the crop: everything reloads for the other composition.
-  wide.addEventListener('change', async () => {
-    const next = wide.matches ? 'wide' : 'narrow';
-    if (next === variant) return;
-    let data;
-    try { data = await crop(next); } catch { return; }
-    variant = next; hero = data;
-    canvas?.remove();
-    canvas = context = art = artContext = layers = loading = pending = fade = null;
-    stage.classList.remove('is-ready');
-    time = hero.still * hero.duration; last = 0;
-    setBusy(false);
-    worker?.postMessage({ warm: variant });
-    player.sync();
-  });
 
   function fit() {
     if (!canvas) return;
@@ -181,41 +165,309 @@ async function mountHero(figure) {
     paint();
   }
 
-  const frame = () => Math.floor(time / hero.duration) % hero.frames;
-  function compose(target, i, replace = {}) {
-    target.clearRect(0, 0, hero.width, hero.height);
-    target.drawImage(layers.bg, 0, 0);
-    for (const name of hero.order) (replace[name] ?? layers[name])(target, i, hero.layers[name].x, hero.layers[name].y);
-  }
+  // The scene's frame: the loop's clock until the live runners take over, then theirs.
+  const frame = () => live.on ? live.frame % cycle() : Math.floor(time / MS()) % cycle();
   function paint() {
     if (!canvas || !layers) return;
-    const i = frame(), { width: W, height: H } = hero;
-    compose(artContext, i);
-    if (fade && fade.step >= DISSOLVE) fade = null;
-    if (fade) {
-      const before = fade.frozen ?? readFrame(c => compose(c, i, fade.old), W, H);
-      artContext.putImageData(dissolve(before, artContext.getImageData(0, 0, W, H), (fade.step + 1) / (DISSOLVE + 1)), 0, 0);
+    const i = frame();
+    artContext.clearRect(0, 0, hero.width, hero.height);
+    artContext.drawImage(layers.bg, 0, 0);
+    for (const name of hero.order) {
+      const { x, y } = hero.layers[name];
+      if ((live.on || live.still) && liveCanvas[name]) artContext.drawImage(liveCanvas[name][0], x, y);
+      else layers[name](artContext, i, x, y);
     }
     context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.drawImage(art, 0, 0, canvas.width, canvas.height);
   }
 
+  // ---- worker plumbing
+  // A worker that fails (no module workers, a missing source, an engine error) is not restarted for this crop: the
+  // pre-rendered loop stays, and the buttons, which need it, are hidden.
+  function startLive() {
+    if (live.worker || live.failed || !window.Worker) return;
+    let worker;
+    try { worker = new Worker(versioned(new URL('live-worker.js', import.meta.url)), { type: 'module' }); } catch { failLive(); return; }
+    live.worker = worker;
+    const forVariant = variant;
+    worker.addEventListener('message', ({ data }) => {
+      if (live.worker !== worker) return;
+      if (data.loaded) { worker.postMessage({ init: forVariant }); return; }
+      if (data.error) { failLive(); return; }
+      if (data.ready) {
+        live.ready = true; live.frame = data.frame;
+        live.ms = data.warmup / (3 * cycle() + 1);
+        whenReady();
+        return;
+      }
+      received(data);
+    });
+    worker.addEventListener('error', event => { event.preventDefault(); if (live.worker === worker) failLive(); });
+  }
+  function stopLive() {
+    live.worker?.terminate();
+    const wasOn = live.on;
+    Object.assign(live, { worker: null, ready: false, on: false, still: false, rendered: -1, inFlight: false, pending: null, wanted: null, holdUntil: null, eager: false, scripts: [] });
+    stage.classList.remove('is-live');
+    if (wasOn) { time = live.frame % cycle() * MS(); paint(); }
+    caption('Pixel art made with ', '.');
+  }
+  function failLive() {
+    stopLive();
+    live.failed = true;
+    for (const button of Object.values(buttons)) button.hidden = true;
+  }
+  function send(advance, inputs, render) {
+    live.inFlight = true;
+    live.request += 1;
+    live.sent = performance.now();
+    live.worker.postMessage({ id: live.request, advance, inputs, render });
+  }
+  // Once warm, catch the runners up to the loop on screen: on their first pass they hold the approved loop's exact
+  // frames (until its seam blend, the last few frames), so the switch happens on a frame both show and nothing visibly
+  // changes. Late in the loop they wait at frame 0 for it to come round instead. A press before then switches at once.
+  const SEAM = 88;
+  function whenReady() {
+    if (live.pending) { const run = live.pending; live.pending = null; run(); return; }
+    if (motion()) catchUp();
+  }
+  function catchUp() {
+    if (live.inFlight || !live.ready || live.on || !motion()) return;
+    const at = Math.floor(time / MS()) % cycle(), here = live.frame % cycle();
+    const behind = (at - here + cycle()) % cycle();
+    const lead = START_LEAD + Math.ceil(behind * Math.max(live.ms, 10) / MS());
+    const target = live.frame < cycle() && here + behind + lead >= SEAM && !live.eager ? 0 : behind + lead;
+    // Waiting where the runners already are: hold their rendered frame until the loop comes round to it.
+    if (target === 0 && live.rendered === live.frame) { live.holdUntil = here; return; }
+    live.wanted = 'switch';
+    send(Math.min(target, cycle() - 1), [], true);
+  }
+  // Back to live after a pause or a still: straight on from a still (the page shows the runners' own frame), else
+  // catch up to the loop.
+  function resumeLive() {
+    if (live.inFlight || !live.ready || live.on || live.holdUntil !== null || !motion()) return;
+    if (live.still) goLive(); else catchUp();
+  }
+  // After each reply: a press that arrived meanwhile runs now, and a resume that arrived meanwhile carries on.
+  function afterReply() {
+    if (live.inFlight) return;
+    if (live.pending && live.ready) { const run = live.pending; live.pending = null; run(); return; }
+    resumeLive();
+  }
+  function received(data) {
+    live.inFlight = false;
+    live.frame = data.frame;
+    if (data.ms) { live.ms = live.ms ? live.ms * 0.8 + data.ms * 0.2 : data.ms; live.counted = (live.counted ?? 0) + 1; }
+    if (data.steam) { ink('steam', data.steam); ink('liquid', data.liquid); live.rendered = data.frame; }
+    const wanted = live.wanted;
+    live.wanted = null;
+    if (wanted === 'switch') {
+      // Hold this frame until the loop on screen reaches it; if the loop already passed it, catch up again. A visitor
+      // who pressed or clicked meanwhile gets the live frame at once. Paused meanwhile: wait for Resume.
+      if (motion()) {
+        const ahead = (live.frame % cycle() - Math.floor(time / MS()) % cycle() + cycle()) % cycle();
+        if (live.eager || ahead === 0) goLive();
+        else if (ahead > cycle() / 2) catchUp();
+        else live.holdUntil = live.frame % cycle();
+      }
+    } else if (wanted === 'still') {
+      time = live.frame % cycle() * MS();
+      showStill(true);
+    } else {
+      if (wanted === 'interactive' && live.paintAt) { live.latency = performance.now() - live.paintAt; live.paintAt = 0; figure.dataset.liveLatency = Math.round(live.latency); }
+      paint();
+      if (live.on && motion()) updateCaption();
+    }
+    afterReply();
+  }
+  function goLive() {
+    // For checks: the frame the switch happened on, and the loop's frame at that moment (equal unless a press forced it).
+    figure.dataset.liveSwitch = `${live.frame}:${Math.floor(time / MS()) % cycle()}`;
+    live.on = true;
+    live.still = false;
+    live.holdUntil = null;
+    live.eager = false;
+    pointer.last = null;
+    // The frame cost is measured afresh once live (catching up includes the engine's first, slower runs).
+    live.ms = 0; live.counted = 0; live.shownMs = 0;
+    stage.classList.add('is-live');
+    paint();
+    updateCaption(true);
+  }
+  function updateCaption(force = false) {
+    // The measured cost of a frame (after 15 live frames), refreshed at most every few seconds so it stays readable.
+    const counted = live.counted >= 15, ms = Math.max(1, Math.round(live.ms)), now = performance.now();
+    if (!force && (!counted || (live.shownMs && (Math.abs(ms - live.shownMs) < 2 || now - live.shownAt < 4000)))) return;
+    if (counted) { live.shownMs = ms; live.shownAt = now; figure.dataset.liveMs = ms; }
+    caption('Running live in your browser: ', ` fluid simulation${counted ? `, ${ms} ms a frame` : ''}. ${touch ? 'Tap' : 'Hover, click or drag'} the steam and the flask.`, force);
+  }
+
+  // ---- inputs: gathered between frames, sent with the next step
+  const pointer = { x: 0, y: 0, down: false, dragging: false, last: null, startX: 0, startY: 0 };
+  function toArt(event) {
+    const bounds = stage.getBoundingClientRect();
+    return [(event.clientX - bounds.left) / bounds.width * hero.width, (event.clientY - bounds.top) / bounds.height * hero.height];
+  }
+  function inLayer(layer, x, y, margin = 0) {
+    const L = hero.layers[layer];
+    return x >= L.x - margin && y >= L.y - margin && x < L.x + L.width + margin && y < L.y + L.height + margin;
+  }
+  function inBulb(x, y) {
+    const L = hero.layers.liquid, { at, radius } = hero.liquid.bulb;
+    return Math.hypot(x - L.x - at[0], y - L.y - at[1]) <= radius + 2;
+  }
+  const local = (layer, x, y) => [x - hero.layers[layer].x, y - hero.layers[layer].y];
+  const input = (layer, method, args) => ({ layer, method, args });
+  // The pointer's motion over the last frame becomes one push along it: a hover swirls the steam, a drag stirs the
+  // steam or sloshes the flask.
+  function pointerInputs() {
+    const out = [];
+    if (!pointer.last) return out;
+    const [x0, y0] = pointer.last, dx = pointer.x - x0, dy = pointer.y - y0;
+    pointer.last = [pointer.x, pointer.y];
+    if (Math.abs(dx) + Math.abs(dy) < 0.2) return out;
+    const mid = [x0 + dx / 2, y0 + dy / 2];
+    if (pointer.dragging && inBulb(...mid)) {
+      const [lx, ly] = local('liquid', ...mid);
+      out.push(input('liquid', 'push', { x: lx, y: ly, vx: dx * DRAG.liquid, vy: dy * DRAG.liquid, radius: DRAG.radius }));
+    } else if (inLayer('steam', ...mid, 4)) {
+      const { gain, radius } = pointer.dragging ? DRAG : HOVER, [lx, ly] = local('steam', ...mid);
+      out.push(input('steam', 'push', { x: lx, y: ly, vx: dx * gain, vy: dy * gain, radius }));
+    }
+    return out;
+  }
+  // A click: a puff of steam where it lands, or a splash and a burst of bubbles in the flask.
+  function clickInputs(x, y) {
+    if (inBulb(x, y)) {
+      const [lx, ly] = local('liquid', x, y);
+      return [input('liquid', 'push', { x: lx, y: ly, vx: 0, vy: 3, radius: 5 }), input('liquid', 'push', { x: lx - 4, y: ly + 2, vx: -2, vy: -2.5, radius: 4 }),
+        input('liquid', 'push', { x: lx + 4, y: ly + 2, vx: 2, vy: -2.5, radius: 4 }), input('liquid', 'boost', ['bubbles', 4, 10]), input('liquid', 'boost', ['big-bubbles', 4, 10])];
+    }
+    if (inLayer('steam', x, y)) {
+      const [lx, ly] = local('steam', x, y), radius = hero.steam.billows?.[0]?.radius ?? 3;
+      return [input('steam', 'puff', { x: lx, y: ly, radius, density: 2.6, temperature: 0.9 }), input('steam', 'push', { x: lx, y: ly + 1, vx: 0, vy: -1.2, radius: radius + 2 })];
+    }
+    return [];
+  }
+  // Scripted presses: one input list per frame.
+  const SCRIPTS = {
+    stir: k => {
+      const { at } = hero.liquid.bulb, angle = k / STIR_FRAMES * Math.PI * 2.5, cx = at[0], cy = at[1] + 10;
+      return [input('liquid', 'push', { x: cx + Math.cos(angle) * 7, y: cy + Math.sin(angle) * 4, vx: -Math.sin(angle) * 2.6, vy: Math.cos(angle) * 1.5, radius: 7 }),
+        ...(k === 0 ? [input('liquid', 'boost', ['bubbles', 2, STIR_FRAMES])] : [])];
+    },
+    heat: k => {
+      const out = [];
+      if (k === 0) for (const layer of ['liquid', 'steam']) for (const [name, strength] of HEAT_BOOSTS[layer]) out.push(input(layer, 'boost', [name, strength, HEAT_FRAMES]));
+      const { at } = hero.liquid.bulb, vent = hero.steam.vent, radius = hero.steam.billows?.[0]?.radius ?? 3;
+      out.push(input('liquid', 'push', { x: at[0], y: at[1] + 15, vx: 0, vy: -1.6, radius: 7 }));
+      if (k % 7 === 2) out.push(input('steam', 'puff', { x: vent[0], y: vent[1] - 1, radius, density: 2.8, temperature: 0.9 }), input('steam', 'push', { x: vent[0], y: vent[1] - 2, vx: 0, vy: -1.6, radius: radius + 1 }));
+      return out;
+    }
+  };
+  const LENGTH = { stir: STIR_FRAMES, heat: HEAT_FRAMES };
+
+  // Live: inputs and scripts join the next step. With motion off (reduced motion, Pause motion), a press runs the whole
+  // interaction at once in the worker and shows the frame it ends on.
+  function act(inputsFor, length, settle) {
+    if (!motion()) { runStill(inputsFor, length, settle); return; }
+    live.scripts.push({ inputsFor, length, k: 0 });
+    if (live.on) return;
+    // Not live yet: switch as soon as the runners can show a frame (the loop may jump a little).
+    live.eager = true;
+    if (live.failed) return;
+    if (!live.worker) { caption('Pixel art made with ', '. Starting the live simulation…', true); startLive(); }
+    else if (live.holdUntil !== null) goLive();
+    else if (live.ready) resumeLive();
+    else caption('Pixel art made with ', '. Starting the live simulation…', true);
+  }
+  function runStill(inputsFor, length, settle) {
+    const run = () => {
+      const inputs = Array.from({ length: length + settle }, (_, k) => k < length ? inputsFor(k) : []);
+      live.wanted = 'still';
+      send(length + settle, inputs, true);
+      load().catch(() => {});
+    };
+    if (live.failed) return;
+    if (!live.worker) { caption('Pixel art made with ', '. Starting the live simulation…', true); live.pending = run; startLive(); return; }
+    if (!live.ready || live.inFlight) { live.pending = run; return; }
+    run();
+  }
+  // A still from the live runners: their layers over the loop's other layers at the same frame, until the loop moves.
+  function showStill(result) {
+    live.on = false;
+    live.still = true;
+    stage.classList.remove('is-live');
+    if (result) caption('Simulated in your browser by ', `, ${Math.max(1, Math.round(live.ms))} ms a frame.`, true);
+    paint();
+  }
+
+  stage.addEventListener('pointermove', event => {
+    if (event.pointerType === 'touch') return;
+    [pointer.x, pointer.y] = toArt(event);
+    if (!pointer.last) pointer.last = [pointer.x, pointer.y];
+    if (pointer.down && Math.hypot(pointer.x - pointer.startX, pointer.y - pointer.startY) > 1.5) pointer.dragging = true;
+    stage.classList.toggle('is-target', inLayer('steam', pointer.x, pointer.y) || inBulb(pointer.x, pointer.y));
+    if (!live.on && motion()) startLive();
+  }, { passive: true });
+  stage.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'touch' || event.button !== 0) return;
+    [pointer.x, pointer.y] = toArt(event);
+    Object.assign(pointer, { down: true, dragging: false, startX: pointer.x, startY: pointer.y, last: [pointer.x, pointer.y] });
+    stage.setPointerCapture?.(event.pointerId);
+    stage.classList.add('is-dragging');
+  });
+  const release = () => { pointer.down = false; stage.classList.remove('is-dragging'); };
+  stage.addEventListener('pointerup', release);
+  stage.addEventListener('pointercancel', release);
+  stage.addEventListener('pointerleave', () => { pointer.last = null; stage.classList.remove('is-target'); });
+  // A click or a tap (a drag that ends is not a click).
+  stage.addEventListener('click', event => {
+    if (pointer.dragging) { pointer.dragging = false; return; }
+    const [x, y] = toArt(event), inputs = clickInputs(x, y);
+    if (!inputs.length) return;
+    live.paintAt = performance.now();
+    act(() => inputs, 1, 9);
+  });
+  buttons.stir.hidden = buttons.heat.hidden = !window.Worker;
+  buttons.stir.addEventListener('click', () => { live.paintAt = performance.now(); act(SCRIPTS.stir, STIR_FRAMES, 6); });
+  buttons.heat.addEventListener('click', () => { live.paintAt = performance.now(); act(SCRIPTS.heat, HEAT_FRAMES, 0); });
+
+  // ---- the clock
   const player = {
     running: () => Boolean(layers) && motion() && visible && !document.hidden,
     advance(now) {
-      const before = frame();
-      if (last) time = (time + Math.min(now - last, 250)) % (hero.frames * hero.duration);
+      if (!live.on) {
+        const before = Math.floor(time / MS());
+        if (last) time = (time + Math.min(now - last, 250)) % (cycle() * MS());
+        last = now;
+        const at = Math.floor(time / MS());
+        if (at === before) return;
+        live.still = false;
+        // Switch on the held frame, even if a slow frame skipped past it.
+        if (live.holdUntil !== null) {
+          const due = (live.holdUntil - before + cycle()) % cycle(), moved = (at - before + cycle()) % cycle();
+          if (due > 0 && due <= moved) { goLive(); return; }
+        }
+        paint();
+        return;
+      }
+      // Live: one step per 70 ms, with this frame's inputs; the reply paints. A slow device simply steps less often.
       last = now;
-      if (frame() === before) return;
-      if (fade) fade.step += 1;
-      paint();
+      if (live.inFlight || now - live.sent < MS() - 4) return;
+      const inputs = pointerInputs();
+      for (const script of live.scripts) inputs.push(...script.inputsFor(script.k++));
+      live.scripts = live.scripts.filter(script => script.k < script.length);
+      if (live.paintAt) live.wanted = 'interactive';
+      send(1, [inputs], true);
     },
     sync() {
-      if (!player.running()) last = 0;
-      // Pausing mid-dissolve settles on the new loop rather than freezing a dithered mix.
-      if (!motion() && fade) { fade = null; paint(); }
-      if (motion() && visible && !layers) load().then(schedule, failLoad);
+      if (!player.running()) { last = 0; pointer.last = null; }
+      if (motion() && visible && !layers) load().then(() => player.sync(), failLoad);
+      if (motion() && visible && layers && !live.worker) idleThen(startLive);
+      if (motion() && live.ready && !live.on) resumeLive();
+      if (!motion() && live.on) { time = live.frame % cycle() * MS(); showStill(false); }
       schedule();
     },
     fit
@@ -225,145 +477,35 @@ async function mountHero(figure) {
   document.addEventListener('visibilitychange', player.sync);
   if ('ResizeObserver' in window) new ResizeObserver(fit).observe(stage);
   else window.addEventListener('resize', fit, { passive: true });
-
-  // Without the sheets the still stays; without the worker the loop keeps playing and only the caption changes.
   function failLoad() { if (!layers) stage.classList.remove('is-ready'); }
-  function failSimulation(message = 'The live simulation is not available in this browser.') {
-    setBusy(false);
-    status.textContent = message;
-  }
 
-  // Each simulation gets a fresh worker, started ahead of time: a long-lived one grows slower with every compile.
-  // A worker that fails before anyone asked for a simulation is dropped quietly; the next press tries again.
-  function startWorker() {
-    if (worker || !window.Worker) return worker;
-    try {
-      const fresh = new Worker(versioned(new URL('fluid-worker.js', import.meta.url)), { type: 'module' });
-      fresh.addEventListener('message', ({ data }) => {
-        if (data.ready) fresh.postMessage({ warm: variant });
-        else if (pending && data.id === request) {
-          fresh.terminate();
-          if (worker === fresh) { worker = null; startWorker(); }
-          finish(data);
-        }
-      });
-      fresh.addEventListener('error', event => {
-        event.preventDefault();
-        fresh.terminate();
-        if (worker !== fresh) return;
-        worker = null;
-        if (pending) { pending = null; failSimulation(); }
-      });
-      worker = fresh;
-    } catch { worker = null; }
-    return worker;
-  }
-
-  function setBusy(value) {
-    busy = value;
-    stage.setAttribute('aria-busy', String(value));
-    for (const button of Object.values(buttons)) button.setAttribute('aria-disabled', String(value));
-  }
-
-  // Where a visitor's event starts in its live loop: just after the result can arrive while playing; with motion
-  // off, a different moment each press.
-  const period = layer => SETTINGS[layer].frames ?? hero.frames;
-  function startFrame(layer) {
-    const starts = STILL_STARTS[layer];
-    let start = motion() ? (frame() + Math.ceil(estimate[layer] / hero.duration) + 3) % period(layer) : starts[presses % starts.length];
-    if (start > period(layer) - LONGEST[layer]) start = 0;
-    return start;
-  }
-
-  function simulate(layer, at, kind = layer === 'steam' ? 'heat' : 'stir') {
-    if (busy) return;
-    if (!startWorker()) { failSimulation(); return; }
-    setBusy(true);
-    status.textContent = 'Simulating in your browser…';
-    const start = startFrame(layer);
-    presses += 1;
-    // A vortex turns away from the middle of what was clicked; a button alternates.
-    const middle = layer === 'steam' ? hero.steam.vent[0] : hero.liquid.bulb.at[0];
-    spin = at ? (at[0] < middle ? -1 : 1) : -spin;
-    const point = at ?? (layer === 'steam' ? hero.steam.vent : [hero.liquid.bulb.at[0], hero.liquid.bulb.at[1] + 11]);
-    request += 1;
-    pending = { layer, kind, start, variant };
-    worker.postMessage({ id: request, variant, layer, emitters: EMITTERS[kind](point, start, hero[layer], spin), settings: SETTINGS[layer] });
-    load().catch(() => {});
-  }
-
-  async function finish(result) {
-    const { layer, kind, start, variant: asked } = pending;
-    pending = null;
-    if (asked !== variant) return;
-    if (result.error) { failSimulation(); return; }
-    // The next event is timed from the simulation itself plus a little messaging, not from a cold first start.
-    estimate[layer] = result.ms * 1.15 + 150;
-    try { await load(); } catch { failLoad(); failSimulation('The new simulation could not be shown; the still stays.'); return; }
-    if (asked !== variant) return;
-    const old = { [layer]: layers[layer] };
-    layers[layer] = stripLayer(result);
-    if (motion()) {
-      // The event should begin just after the dissolve. If the result came late, step back to just before its latest
-      // start and dissolve from the frame on screen; otherwise dissolve from the old loop as it keeps playing.
-      const behind = ((frame() - start) % period(layer) + period(layer)) % period(layer);
-      if (behind > 0 && behind < period(layer) / 2) {
-        fade = { frozen: artContext.getImageData(0, 0, hero.width, hero.height), step: 0 };
-        time = ((frame() - behind - 2 + hero.frames) % hero.frames) * hero.duration;
-      } else fade = { old, step: 0 };
-    } else {
-      fade = null;
-      time = ((start + SHOW[kind]) % hero.frames) * hero.duration;
-    }
-    paint();
-    setBusy(false);
-    const ms = Math.round(result.ms);
-    status.replaceChildren('Simulated in your browser by ', Object.assign(document.createElement('a'),
-      { href: 'https://github.com/skulitom/Pixelbolt', textContent: 'Pixelbolt' }), ` in ${ms.toLocaleString('en-GB')} ms.`);
-    schedule();
-  }
-
-  // The flask's bulb and the air above its neck are the two places a click means something.
-  function hit(event) {
-    const bounds = stage.getBoundingClientRect();
-    const x = (event.clientX - bounds.left) / bounds.width * hero.width, y = (event.clientY - bounds.top) / bounds.height * hero.height;
-    const liquid = hero.layers.liquid, bulb = hero.liquid.bulb;
-    const bx = liquid.x + bulb.at[0], by = liquid.y + bulb.at[1];
-    if (Math.hypot(x - bx, y - by) <= bulb.radius + 3) {
-      // Stir inside the liquid: below its surface and inside the glass.
-      return { layer: 'liquid', kind: 'stir', at: [Math.round(Math.min(Math.max(x - liquid.x, 10), 34)), Math.round(Math.min(Math.max(y - liquid.y, 38), 42))] };
-    }
-    const steam = hero.layers.steam, { vent, plume } = hero.steam;
-    const sx = x - steam.x, sy = y - steam.y;
-    if (sx < 0 || sx >= steam.width || sy < 0 || sy > vent[1] + 2) return null;
-    if (Math.hypot(sx - vent[0], sy - vent[1]) < 8) return { layer: 'steam', kind: 'heat', at: vent };
-    const inset = 4;
-    return { layer: 'steam', kind: 'swirl', at: [Math.round(Math.min(Math.max(sx, plume[0] + inset), plume[2] - inset)), Math.round(Math.min(Math.max(sy, plume[1] + inset), plume[3] - inset))] };
-  }
-  stage.addEventListener('click', event => {
-    const target = hit(event);
-    if (target) simulate(target.layer, target.at, target.kind);
+  // A resize across the breakpoint swaps the crop: the loop and the live runners restart for the other composition.
+  wide.addEventListener('change', async () => {
+    const next = wide.matches ? 'wide' : 'narrow';
+    if (next === variant) return;
+    let data;
+    try { data = await crop(next); } catch { return; }
+    if ((wide.matches ? 'wide' : 'narrow') !== next || next === variant) return;
+    stopLive();
+    live.failed = false;
+    for (const button of Object.values(buttons)) button.hidden = !window.Worker;
+    variant = next; hero = data;
+    canvas?.remove();
+    canvas = context = art = artContext = layers = loading = null;
+    for (const key of Object.keys(liveCanvas)) delete liveCanvas[key];
+    stage.classList.remove('is-ready', 'is-live');
+    time = hero.still * hero.duration; last = 0;
+    player.sync();
   });
-  stage.addEventListener('pointermove', event => {
-    if (event.pointerType === 'mouse') stage.classList.toggle('is-target', Boolean(hit(event)));
-  }, { passive: true });
-  stage.addEventListener('pointerleave', () => stage.classList.remove('is-target'));
-  for (const [layer, button] of Object.entries(buttons)) {
-    button.hidden = false;
-    button.addEventListener('click', () => { if (button.getAttribute('aria-disabled') !== 'true') simulate(layer); });
-  }
-  // Load Pixelbolt's modules when the visitor shows interest, or once the hero has been on screen for a while with
-  // motion on and the page is idle.
-  for (const type of ['pointerenter', 'focusin', 'touchstart']) figure.addEventListener(type, () => startWorker(), { once: true, passive: true });
-  if (!navigator.connection?.saveData) {
-    setTimeout(() => {
-      if (!motion() || !visible || document.hidden) return;
-      const idle = window.requestIdleCallback ?? (callback => setTimeout(callback, 0));
-      idle(() => startWorker(), { timeout: 3000 });
-    }, 4000);
-  }
   player.sync();
   return player;
+}
+
+// Runs `callback` once the page is idle (or soon, where idle callbacks are missing), unless Save-Data is on.
+function idleThen(callback) {
+  if (navigator.connection?.saveData) return;
+  const idle = window.requestIdleCallback ?? (run => setTimeout(run, 200));
+  idle(() => callback(), { timeout: 2000 });
 }
 
 /* ---------------------------------------------------------------- tool cards */

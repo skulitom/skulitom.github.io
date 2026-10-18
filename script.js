@@ -137,7 +137,7 @@
   });
 
   // Pixelbolt pixel art: the live fluid hero and the tool cards. The static stills in the HTML stay if this fails.
-  import('./assets/pixel/art.js?v=3').then(({ startPixelArt }) => {
+  import('./assets/pixel/art.js?v=5').then(({ startPixelArt }) => {
     syncArt = startPixelArt({ isMotionEnabled: () => motionEnabled }).sync;
     syncArt();
   }).catch(() => {});
