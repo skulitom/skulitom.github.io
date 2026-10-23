@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://skulitom.github.io/Anode/sitemap.xml
+Sitemap: https://skulitom.github.io/Pixelbolt/sitemap.xml
+Sitemap: https://skulitom.github.io/Nestbolt/sitemap.xml
+Sitemap: https://skulitom.github.io/Cutbolt/sitemap.xml
+Sitemap: https://skulitom.github.io/Inkbolt/sitemap.xml
