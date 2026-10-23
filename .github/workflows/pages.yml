@@ -21,7 +21,7 @@ jobs:
       - name: Prepare the static site
         run: |
           mkdir _site
-          cp index.html litharness.html styles.css script.js life.js .nojekyll app-ads.txt robots.txt _site/
+          cp index.html litharness.html styles.css script.js life.js .nojekyll app-ads.txt robots.txt googleca32a2b43bd52405.html _site/
           cp -R assets _site/assets
       - name: Upload the website
         uses: actions/upload-pages-artifact@v3
