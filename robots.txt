@@ -6,3 +6,4 @@ Sitemap: https://skulitom.github.io/Pixelbolt/sitemap.xml
 Sitemap: https://skulitom.github.io/Nestbolt/sitemap.xml
 Sitemap: https://skulitom.github.io/Cutbolt/sitemap.xml
 Sitemap: https://skulitom.github.io/Inkbolt/sitemap.xml
+Sitemap: https://skulitom.github.io/NeonRocketGame/sitemap.xml
